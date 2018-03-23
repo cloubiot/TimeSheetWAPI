@@ -1,0 +1,100 @@
+01/01/2016delimiter $$
+
+CREATE DATABASE `avella` /*!40100 DEFAULT CHARACTER SET latin1 */$$
+create user 'avella'@'localhost' identified by 'avella';
+
+grant all privileges on avella.* to avella@localhost;
+
+
+delimiter $$
+
+CREATE TABLE `data_audit_log` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `TABLE_NAME` varchar(255) DEFAULT NULL,
+  `RECORD_ID` int(11) DEFAULT NULL,
+  `DML_OPERATION` varchar(255) DEFAULT NULL,
+  `CREATE_DATE` date DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1$$
+
+delimiter $$
+
+CREATE TABLE `data_status` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DRUG_DATA_LAST_UPDATED` date DEFAULT NULL,
+  `MENU_DATA_LAST_UPDATED` date DEFAULT NULL,
+  `NOTIFICATION_LAST_UPDATED` date DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+
+delimiter $$
+
+CREATE TABLE `drug` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DRUG_NAME` varchar(255) NOT NULL,
+  `DOSAGE_ADMINISTRATION` longtext,
+  `DOSAGE_FORM_STRENGTH` longtext,
+  `CONTRAINDICTIONS` longtext,
+  `WARNINGS_PRECAUSTIONS` longtext,
+  `ADVERSE_REACTIONS` longtext,
+  `DRUG_INTERACTIONS` longtext,
+  `USE_IN_SPECIFIC_POPULATIONS` longtext,
+  `AVAILABLE_AT_AVELLA` int(11) NOT NULL DEFAULT '1',
+  `DRUG_CATEGORY_ID` int(11) NOT NULL,
+  `SITE_URL` varchar(255) DEFAULT NULL,
+  `INDICATIONS_USAGE` longtext,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE `drug_category` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CATEGORY_NAME` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1$$
+
+delimiter $$
+
+CREATE TABLE `menu` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CATEGORY_NAME` varchar(100) NOT NULL,
+  `DISPLAY_ORDER` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1$$
+
+delimiter $$
+
+CREATE TABLE `menu_item` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `MENU_NAME` varchar(45) DEFAULT NULL,
+  `LINK` varchar(255) DEFAULT NULL,
+  `MENU_ID` int(11) NOT NULL,
+  `ORDER_NO` int(11) DEFAULT NULL,
+  `ICON` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE `notifications` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `TEXT` varchar(255) DEFAULT NULL,
+  `IMAGE_URL` varchar(255) DEFAULT NULL,
+  `STATUS` varchar(255) DEFAULT NULL,
+  `CREATED_DATE` date DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1$$
+
+delimiter $$
+
+CREATE TABLE `social_links` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `youtube_url` varchar(255) DEFAULT NULL,
+  `facebook_url` varchar(255) DEFAULT NULL,
+  `twitter_url` varchar(255) DEFAULT NULL,
+  `googleplus_url` varchar(255) DEFAULT NULL,
+  `linkedin_url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1$$
+

@@ -1,0 +1,30 @@
+<html>
+<body>
+<div class="container" style= "margin-left:5%; margin-right:5%;  border:2px solid black; width:80%">
+<header>
+
+<div class="container">
+<h1 style="margin-top:5px; margin-bottom:5px">
+<img style="width:30%" src="http://dcsolar.cloubiot.com/app/img/dcSolar.png" alt="DCSolar" /></h1>
+</div>
+</header>
+<hr>
+
+<div class="container" style="padding:10px;">
+<b>Welcome $firstName</b>
+<p style="line-height:2">We have created account on DCSolar.<br>
+Your Username:<b>$userName</b><br>
+Password:<b>$password</b><br>
+
+
+
+See you soon on DCSolar</p><br>
+
+<b>Thanks Regards,</b><br>
+<b>$regards</b>
+</div>
+<hr>
+<footer style="padding:10px" align="center">&copy; 2017 DCSolar</footer>
+</div>
+</body>
+</html>
