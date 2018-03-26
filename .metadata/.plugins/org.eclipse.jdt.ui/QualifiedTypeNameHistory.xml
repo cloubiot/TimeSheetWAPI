@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="com.projectLog.clib.model.BaseResponse"/>
+<fullyQualifiedTypeName name="com.projectLog.model.project.GetCountResponse"/>
+<fullyQualifiedTypeName name="com.projectLog.service.UserMgmtService"/>
+</qualifiedTypeNameHistroy>

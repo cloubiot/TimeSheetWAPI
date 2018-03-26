@@ -89,4 +89,7 @@ public class UserMgmtService {
 	public List<UserDetail> getUserByProjectId(int projectId){
 		return this.userQuery.getUserByProjectId(projectId);
 	}
+	public Long getCount(){
+		return this.userMgmtRepository.count();
+	}
 }

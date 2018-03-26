@@ -18,6 +18,7 @@ import com.projectLog.model.dbentity.ProjectUserMapping;
 import com.projectLog.model.dbentity.Projects;
 import com.projectLog.model.project.AddMembersRequest;
 import com.projectLog.model.project.AddProjectRequest;
+import com.projectLog.model.project.GetCountResponse;
 import com.projectLog.model.project.ProjectDetail;
 import com.projectLog.model.project.ProjectDetailRequest;
 import com.projectLog.model.project.ProjectDetailResponse;
@@ -28,6 +29,7 @@ import com.projectLog.model.timesheet.TimeSheetRequest;
 import com.projectLog.model.usermgmt.UserHour;
 import com.projectLog.model.usermgmt.UserHourResponse;
 import com.projectLog.service.ProjectService;
+import com.projectLog.service.UserMgmtService;
 
 @RestController
 @RequestMapping("/project")
@@ -38,6 +40,9 @@ public class ProjectController {
 	
 	@Autowired
 	ProjectService projectService;
+	
+	@Autowired
+	UserMgmtService userMgmtService;
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/addProject")
 	public SuccessIDResponse addAndUpdateProject(@RequestBody AddProjectRequest request){
@@ -183,4 +188,50 @@ public class ProjectController {
 		return response;
 		
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/projectListPagination")
+	public ProjectListResponse projectListPagination(@RequestBody ProjectPaginatoinRequest request){
+		ProjectListResponse response = new ProjectListResponse();
+		try{
+			int from=1;
+			int to=10;
+			for(int i=1;i<=request.getValue();i++){
+				if(i==1){
+					from=0;
+					to=10;
+				}
+				else{
+					from+=10;
+					to+=10;
+				}
+			}
+			List<ProjectDetail> projects = projectService.getProjectListPagination(
+													request.getUserId(),request.getRoleId(),from, to);
+			response.setProjects(projects);
+			logger.info("Project Pagination");
+		}
+		catch(Exception e){
+			logger.error("Pagination failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value ="/getCount")
+	public GetCountResponse getCount(){
+		GetCountResponse response = new GetCountResponse();
+		try{
+			long projectCount = projectService.getCount();
+			long userCount = userMgmtService.getCount();
+			response.setProjectCount(projectCount);
+			response.setUserCount(userCount);
+			logger.info("count");
+		}
+		catch(Exception e){
+			logger.error("Count failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
 }
+

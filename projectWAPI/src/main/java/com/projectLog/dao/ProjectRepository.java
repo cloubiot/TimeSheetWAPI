@@ -10,4 +10,5 @@ public interface ProjectRepository extends CrudRepository<Projects,Long>{
 
 	Projects findById(int id);
 	List<Projects> findAll();
+	
 }

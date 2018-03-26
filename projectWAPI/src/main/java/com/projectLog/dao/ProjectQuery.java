@@ -45,4 +45,19 @@ public class ProjectQuery {
 		 List<UserHour> userHour = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserHour.class));
 		return userHour;
 	}
+	
+	public List<ProjectDetail> getProjectListPagination(int userId,int roleId, int from, int to){
+		String query = null;
+		if(roleId == 1){
+			query =" select * from projects";
+		 
+		}
+		else{
+			query = "select projects.*,project_user_mapping.hours_per_project from projects inner join project_user_mapping on project_user_mapping.project_id = projects.id"
+					+ " where project_user_mapping.user_id ="+userId;
+		}
+			query+=" limit "+from+" , "+to;
+		List<ProjectDetail> projects = jdbcTemplate.query(query, new BeanPropertyRowMapper(ProjectDetail.class));
+		return projects;
+	}
 }

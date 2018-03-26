@@ -112,4 +112,33 @@ public class TimeSheetController {
 		}
 		return response;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/getTimeSheetPagination")
+	public TimeSheetListResponse getTimeSheetPagination(@RequestBody TimeSheetListRequest request){
+		TimeSheetListResponse response = new TimeSheetListResponse();
+		try{
+			int from=1;
+			int to=10;
+			for(int i=1;i<=request.getValue();i++){
+				if(i==1){
+					from=0;
+					to=10;
+				}
+				else{
+					from+=10;
+					to+=10;
+				}
+			}
+			List<TimeSheetList> timeSheet = timeSheetService.getTimeSheetPagination(request.getUserId(),
+											request.getProjectId(),request.getRoleId(), from, to);
+			response.setTimeSheet(timeSheet);
+			logger.info("List of timesheet by id");
+		}
+		catch(Exception e){
+			logger.error("Time sheet fail",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
 }

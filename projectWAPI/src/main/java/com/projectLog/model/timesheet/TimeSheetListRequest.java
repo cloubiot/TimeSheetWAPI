@@ -5,6 +5,7 @@ public class TimeSheetListRequest {
 	int userId;
 	int projectId;
 	int roleId;
+	int value;
 
 	public int getUserId() {
 		return userId;
@@ -28,6 +29,14 @@ public class TimeSheetListRequest {
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
 	}
 	
 	

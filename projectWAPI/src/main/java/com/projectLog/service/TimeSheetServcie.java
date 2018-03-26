@@ -33,4 +33,8 @@ public class TimeSheetServcie {
 	public String getHrsById(int projectId,int userId){
 		return this.timeSheetQuery.getHrsById(projectId, userId);
 	}
+	
+	public List<TimeSheetList> getTimeSheetPagination(int userId, int projectId, int roleId, int from, int to){
+		return this.timeSheetQuery.getTimeSheetPagination(userId, projectId, roleId, from, to);
+	}
 }

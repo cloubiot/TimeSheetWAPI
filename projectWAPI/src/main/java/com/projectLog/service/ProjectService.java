@@ -50,4 +50,11 @@ public class ProjectService {
 	public List<UserHour> getUserHour(int projectId){
 		return this.projectQuery.getUserHour(projectId);
 	}
+	public List<ProjectDetail> getProjectListPagination(int userId,int roleId,int from, int to){
+		return this.projectQuery.getProjectListPagination(userId,roleId, from, to);
+	}
+	
+	public Long getCount(){
+		return this.projectRepository.count();
+	}
 }

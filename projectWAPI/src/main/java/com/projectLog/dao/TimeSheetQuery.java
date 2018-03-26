@@ -39,4 +39,16 @@ public class TimeSheetQuery {
 		String totalHrs =  jdbcTemplate.queryForObject(query,String.class);
 		return totalHrs;
 	}
+	
+	public List<TimeSheetList> getTimeSheetPagination(int userId,int projectId, int roleId, int from, int to){
+		
+		String query = " select timesheet.*,user.user_name from timesheet "+
+							" inner join user on user.id = timesheet.user_id where timesheet.project_id="+projectId;
+		if(roleId > 1)	
+			query+=" and timesheet.user_id = "+userId; 
+		query+=" order by id DESC limit "+from+" , "+to;
+		
+		List<TimeSheetList> timeSheet = jdbcTemplate.query(query, new BeanPropertyRowMapper(TimeSheetList.class));
+		return timeSheet;
+	}
 }
