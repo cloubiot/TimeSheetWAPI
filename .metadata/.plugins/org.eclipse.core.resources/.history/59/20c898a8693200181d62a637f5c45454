@@ -1,0 +1,5 @@
+package com.timeSheet.model.usermgmt;
+
+public class RoleResponse {
+
+}

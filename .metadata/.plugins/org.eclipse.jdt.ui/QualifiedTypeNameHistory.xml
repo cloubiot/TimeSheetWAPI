@@ -3,4 +3,16 @@
 <fullyQualifiedTypeName name="com.projectLog.clib.model.BaseResponse"/>
 <fullyQualifiedTypeName name="com.projectLog.model.project.GetCountResponse"/>
 <fullyQualifiedTypeName name="com.projectLog.service.UserMgmtService"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="org.springframework.test.web.servlet.MockMvc"/>
+<fullyQualifiedTypeName name="org.springframework.boot.test.mock.mockito.MockBean"/>
+<fullyQualifiedTypeName name="com.timeSheet.clib.model.BaseResponse"/>
+<fullyQualifiedTypeName name="com.timeSheet.model.usermgmt.RoleResponse"/>
+<fullyQualifiedTypeName name="org.springframework.data.repository.CrudRepository"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.timeSheet.dao.UserRoleRepository"/>
+<fullyQualifiedTypeName name="com.timeSheet.model.dbentity.UserRole"/>
+<fullyQualifiedTypeName name="javax.persistence.Entity"/>
+<fullyQualifiedTypeName name="javax.persistence.Id"/>
+<fullyQualifiedTypeName name="javax.persistence.GeneratedValue"/>
 </qualifiedTypeNameHistroy>

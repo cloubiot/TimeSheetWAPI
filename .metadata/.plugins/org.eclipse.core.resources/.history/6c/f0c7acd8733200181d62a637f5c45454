@@ -1,0 +1,5 @@
+package com.timeSheet.model.project;
+
+public class RemoveMemberRequest {
+
+}

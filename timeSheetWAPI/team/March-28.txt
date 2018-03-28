@@ -1,0 +1,8 @@
+use cloubiotproject;
+
+alter table projects modify column START_DATE  varchar(45);
+alter table projects change column FRONT_END PROJECT_TYPE varchar(100);
+
+alter table projects change column BACK_END END_DATE varchar(45);
+alter table timesheet modify column NO_OF_HRS varchar(11);
+alter table project_user_mapping add column IS_CHECKED varchar(11) default 'true';

@@ -1,0 +1,18 @@
+package com.projectLog.model.project;
+
+import com.projectLog.model.dbentity.Projects;
+import com.timeSheet.clib.model.BaseResponse;
+
+public class ProjectDetailResponse extends BaseResponse{
+
+	Projects project;
+
+	public Projects getProject() {
+		return project;
+	}
+
+	public void setProject(Projects project) {
+		this.project = project;
+	}
+	
+}

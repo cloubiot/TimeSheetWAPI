@@ -87,3 +87,9 @@
 0:0:0:0:0:0:0:1 - - [26/Mar/2018:13:17:15 +0530] "POST /projectWAPI/usermgmt/login HTTP/1.1" 200 229
 0:0:0:0:0:0:0:1 - - [26/Mar/2018:13:17:15 +0530] "GET /projectWAPI/project/getCount HTTP/1.1" 200 60
 0:0:0:0:0:0:0:1 - - [26/Mar/2018:13:17:15 +0530] "OPTIONS /projectWAPI/table/getStatusByRole/1 HTTP/1.1" 404 -
+127.0.0.1 - - [26/Mar/2018:18:37:51 +0530] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [26/Mar/2018:18:39:19 +0530] "OPTIONS /projectWAPI/usermgmt/login HTTP/1.1" 200 5
+0:0:0:0:0:0:0:1 - - [26/Mar/2018:18:39:20 +0530] "POST /projectWAPI/usermgmt/login HTTP/1.1" 200 229
+0:0:0:0:0:0:0:1 - - [26/Mar/2018:18:39:20 +0530] "OPTIONS /projectWAPI/project/getCount HTTP/1.1" 200 5
+0:0:0:0:0:0:0:1 - - [26/Mar/2018:18:39:20 +0530] "OPTIONS /projectWAPI/table/getStatusByRole/1 HTTP/1.1" 404 -
+0:0:0:0:0:0:0:1 - - [26/Mar/2018:18:39:20 +0530] "GET /projectWAPI/project/getCount HTTP/1.1" 200 60

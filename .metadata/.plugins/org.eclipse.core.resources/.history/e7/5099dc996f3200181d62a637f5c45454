@@ -1,0 +1,71 @@
+package com.timeSheet.model.dbentity;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@Entity
+public class Projects {
+
+	@Id
+	@GeneratedValue
+	int id;
+	String projectName;
+	String projectType;
+	String endDate;
+	String description;
+	String noOfHrs;
+	@JsonFormat(pattern="MM-dd-yyyy")
+	Date startDate;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	
+	public String getProjectType() {
+		return projectType;
+	}
+	public void setProjectType(String projectType) {
+		this.projectType = projectType;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public String getNoOfHrs() {
+		return noOfHrs;
+	}
+	public void setNoOfHrs(String noOfHrs) {
+		this.noOfHrs = noOfHrs;
+	}
+	
+	
+}
