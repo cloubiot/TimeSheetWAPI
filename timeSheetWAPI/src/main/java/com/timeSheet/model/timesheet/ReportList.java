@@ -7,18 +7,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Timesheet {
+public class ReportList {
 
 	@Id
 	@GeneratedValue
 	int id;
 	int userId;
-	String date;
+	Date date;
 	String projectId;
 	String activityId;
-	String task;
+	String projectName;
+	String activity;
 	double hrs;
-	Date creationdate;
+	String task;
 	
 	public int getId() {
 		return id;
@@ -32,10 +33,10 @@ public class Timesheet {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	public String getProjectId() {
@@ -44,7 +45,6 @@ public class Timesheet {
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
 	}
-	
 	public String getActivityId() {
 		return activityId;
 	}
@@ -52,11 +52,17 @@ public class Timesheet {
 		this.activityId = activityId;
 	}
 	
-	public String getTask() {
-		return task;
+	public String getProjectName() {
+		return projectName;
 	}
-	public void setTask(String task) {
-		this.task = task;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getActivity() {
+		return activity;
+	}
+	public void setActivity(String activity) {
+		this.activity = activity;
 	}
 	public double getHrs() {
 		return hrs;
@@ -64,11 +70,12 @@ public class Timesheet {
 	public void setHrs(double d) {
 		this.hrs = d;
 	}
-	public Date getCreationdate() {
-		return creationdate;
+	public String getTask() {
+		return task;
 	}
-	public void setCreationdate(Date creationdate) {
-		this.creationdate = creationdate;
+	public void setTask(String task) {
+		this.task = task;
 	}
 	
+
 }

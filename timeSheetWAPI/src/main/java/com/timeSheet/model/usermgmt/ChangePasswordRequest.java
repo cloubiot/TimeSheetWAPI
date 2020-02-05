@@ -6,6 +6,8 @@ public class ChangePasswordRequest {
 	String oldPassword;
 	String newPassword;
 	
+	
+	
 	public int getUserId() {
 		return userId;
 	}

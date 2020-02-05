@@ -1,13 +1,16 @@
 package com.timeSheet.model.timesheet;
 
+import java.sql.Date;
+
 public class TimeSheetListRequest {
 
 	int userId;
 	int projectId;
 	int roleId;
 	int value;
-
-	public int getUserId() {
+    Date date_1;
+	
+public int getUserId() {
 		return userId;
 	}
 
@@ -37,6 +40,14 @@ public class TimeSheetListRequest {
 
 	public void setValue(int value) {
 		this.value = value;
+	}
+
+	public Date getDate_1() {
+		return date_1;
+	}
+
+	public void setDate_1(Date date_1) {
+		this.date_1 = date_1;
 	}
 	
 	

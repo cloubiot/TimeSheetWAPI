@@ -7,7 +7,8 @@ import com.timeSheet.clib.model.BaseResponse;
 public class TimeSheetListResponse extends BaseResponse{
 
 	List<TimeSheetList> timeSheet;
-
+	
+	
 	public List<TimeSheetList> getTimeSheet() {
 		return timeSheet;
 	}
@@ -15,6 +16,7 @@ public class TimeSheetListResponse extends BaseResponse{
 	public void setTimeSheet(List<TimeSheetList> timeSheet) {
 		this.timeSheet = timeSheet;
 	}
+
 	
 	
 }

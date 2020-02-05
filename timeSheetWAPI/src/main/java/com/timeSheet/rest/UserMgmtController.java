@@ -119,8 +119,8 @@ public class UserMgmtController {
 			String encryptedPassword = sd.encrypt(request.getPassword());
 			System.out.println(encryptedPassword);
 			UserProfile userProfile = new UserProfile();
-			User user = userMgmtService.login(request.getUserName(), encryptedPassword);
-			if(user != null){
+			List<User> user = userMgmtService.login(request.getUserName(), encryptedPassword);
+			if(!user.isEmpty()){
 				response.setUser(user);
 			}
 			else{
@@ -128,8 +128,10 @@ public class UserMgmtController {
 				logger.info("invalid login");
 			}
 			try{
-				long roleId = userMgmtService.getUserRoleId(user.getId());
+				for(User retUser: user) {
+				long roleId = userMgmtService.getUserRoleId(retUser.getId());
 				response.setRoleId(roleId);
+				}
 			}catch(Exception e){
 				logger.error("roleId not available", e);
 			}
@@ -281,6 +283,7 @@ public class UserMgmtController {
 	@RequestMapping(method = RequestMethod.POST, value = "/changePassword")
 	public SuccessIDResponse changePassword(@RequestBody ChangePasswordRequest request){
 		SuccessIDResponse response = new SuccessIDResponse();
+//		System.out.println("#####"+JSONUtil.toJson(request));
 		try{
 			System.out.println(request.getUserId());
 			SecureData sd = new SecureData();
@@ -288,7 +291,9 @@ public class UserMgmtController {
 			System.out.println(oldPassword);
 			SecureData sd1 = new SecureData();
 			String newPassword = sd1.encrypt(request.getNewPassword());
+			System.out.println(newPassword);
 			User user = userMgmtService.getByIdAndPassword(request.getUserId(), oldPassword);
+			System.out.println("###"+JSONUtil.toJson(user));
 			if(user == null){
 				response.setSuccess(false);
 			}

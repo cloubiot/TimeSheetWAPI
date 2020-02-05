@@ -2,9 +2,13 @@ package com.timeSheet.rest;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +23,20 @@ import com.timeSheet.clib.util.DateTimeUtil;
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
+import com.timeSheet.model.timesheet.Activity;
 import com.timeSheet.model.timesheet.HoursResponse;
+import com.timeSheet.model.timesheet.Project;
+import com.timeSheet.model.timesheet.Report;
+import com.timeSheet.model.timesheet.ReportList;
+import com.timeSheet.model.timesheet.ReportRequest;
+import com.timeSheet.model.timesheet.ReportResponse;
 import com.timeSheet.model.timesheet.TimeSheetList;
 import com.timeSheet.model.timesheet.TimeSheetListRequest;
 import com.timeSheet.model.timesheet.TimeSheetListResponse;
 import com.timeSheet.model.timesheet.TimeSheetRequest;
 import com.timeSheet.model.timesheet.Timesheet;
+import com.timeSheet.model.usermgmt.UserListResponse;
+import com.timeSheet.model.usermgmt.UserWithRole;
 import com.timeSheet.service.ProjectService;
 import com.timeSheet.service.TimeSheetServcie;
 
@@ -41,45 +53,137 @@ public class TimeSheetController {
 	@Autowired
 	ProjectService projectService;
 	
-	@RequestMapping(method = RequestMethod.POST, value="/updateTimeSheet")
-	public SuccessIDResponse updateTimeSheet(@RequestBody TimeSheetRequest request){
-		SuccessIDResponse response = new SuccessIDResponse();
-		try{
-			System.out.println(" timesheet request "+JSONUtil.toJson(request));
-			Timesheet timesheet = new Timesheet();
-			timesheet.setActivity(request.getTimeSheet().getActivity());
-			timesheet.setCheckIn(request.getTimeSheet().getCheckIn());
-			timesheet.setCheckOut(request.getTimeSheet().getCheckOut());
-//			timesheet.setNoOfHrs(request);
-			timesheet.setProjectId(request.getTimeSheet().getProjectId());
-			timesheet.setUserId(request.getTimeSheet().getUserId());
-			timesheet.setUpdatedDate(request.getTimeSheet().getUpdatedDate());
-			timesheet.setNoOfHrs(request.getTimeSheet().getNoOfHrs());
+//	@RequestMapping(method = RequestMethod.POST, value="/updateTimeSheet")
+//	public SuccessIDResponse updateTimeSheet(@RequestBody TimeSheetRequest request){
+//		SuccessIDResponse response = new SuccessIDResponse();
+//		try{
+//			System.out.println(" timesheet request "+JSONUtil.toJson(request));
+//			Timesheet timesheet = new Timesheet();
+//			timesheet.setActivity(request.getTimeSheet().getActivity());
+//			timesheet.setCheckIn(request.getTimeSheet().getCheckIn());
+//			timesheet.setCheckOut(request.getTimeSheet().getCheckOut());
+////			timesheet.setNoOfHrs(request);
+//			timesheet.setProjectId(request.getTimeSheet().getProjectId());
+//			timesheet.setUserId(request.getTimeSheet().getUserId());
+//			timesheet.setUpdatedDate(request.getTimeSheet().getUpdatedDate());
+//			timesheet.setNoOfHrs(request.getTimeSheet().getNoOfHrs());
+//			timeSheetService.saveTimeSheet(timesheet);
+////			DateFormat sdf = new SimpleDateFormat("HH:mm");
+////			Date date = sdf.parse(request.getTimeSheet().getNoOfHrs());
+//			
+//			
+//			String totalhrs = timeSheetService.getHrsById(timesheet.getProjectId(), 0);
+//			System.out.println("HRs "+totalhrs);
+//			String hrsPerUser = timeSheetService.getHrsById(timesheet.getProjectId(), timesheet.getUserId());
+//			Projects project = projectService.getProjectById(timesheet.getProjectId());
+//			project.setNoOfHrs(totalhrs);
+//			projectService.addProject(project);
+//			
+//			ProjectUserMapping projectMapping = projectService.getByProjectAndUserId(timesheet.getProjectId(), timesheet.getUserId());
+//			projectMapping.setHoursPerProject(hrsPerUser);
+//			projectService.saveMapping(projectMapping);
+//			
+//			logger.info("timesheet ");
+//		}
+//		catch(Exception e){
+//			logger.error("Time sheet fail",e);
+//			response.setSuccess(false);
+//			
+//		}
+//		return response;
+//	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="timesheetReport")
+	public SuccessIDResponse timesheetReport(@RequestBody TimeSheetRequest request){
+	SuccessIDResponse response = new SuccessIDResponse();
+	System.out.println("++++"+JSONUtil.toJson(request));
+	try {
+		for( int i = 0;i < request.getTimeSheet().length;i++) {
+	        Timesheet timesheet = new Timesheet();
+			timesheet.setDate(request.getTimeSheet()[i].getDate());
+			timesheet.setProjectId(request.getTimeSheet()[i].getProjectId());
+			timesheet.setActivityId(request.getTimeSheet()[i].getActivityId());
+			timesheet.setTask(request.getTimeSheet()[i].getTask());
+			timesheet.setHrs(request.getTimeSheet()[i].getHrs());
+			timesheet.setUserId(request.getUserTd());
+			timesheet.setCreationdate(new Date());
 			timeSheetService.saveTimeSheet(timesheet);
-//			DateFormat sdf = new SimpleDateFormat("HH:mm");
-//			Date date = sdf.parse(request.getTimeSheet().getNoOfHrs());
-			
-			
-			String totalhrs = timeSheetService.getHrsById(timesheet.getProjectId(), 0);
-			System.out.println("HRs "+totalhrs);
-			String hrsPerUser = timeSheetService.getHrsById(timesheet.getProjectId(), timesheet.getUserId());
-			Projects project = projectService.getProjectById(timesheet.getProjectId());
-			project.setNoOfHrs(totalhrs);
-			projectService.addProject(project);
-			
-			ProjectUserMapping projectMapping = projectService.getByProjectAndUserId(timesheet.getProjectId(), timesheet.getUserId());
-			projectMapping.setHoursPerProject(hrsPerUser);
-			projectService.saveMapping(projectMapping);
-			
-			logger.info("timesheet ");
+//			System.out.println("####"+JSONUtil.toJson(timesheet));
+			logger.info("TimeSheet added");
+
+	}
+	}
+	catch(Exception e){
+		logger.error("Time sheet fail",e);
+		response.setSuccess(false);
+		
+	}
+	return response;
+	}
+	
+	
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/getReport")
+	public ReportResponse getReport(@RequestBody ReportRequest request){
+		ReportResponse response = new ReportResponse();
+		try{
+			List<Report> reportview = timeSheetService.getReport(request.getUserId());
+			response.setReport(reportview);
+			System.out.println(JSONUtil.toJson(reportview));
+			logger.info("employee Report");
 		}
 		catch(Exception e){
-			logger.error("Time sheet fail",e);
+			logger.error("List failed",e);
 			response.setSuccess(false);
-			
 		}
 		return response;
 	}
+	@RequestMapping(method = RequestMethod.GET, value = "/getProject")
+	public ReportResponse getProject() {
+		ReportResponse response = new ReportResponse();
+		try {
+			List<Project> project = timeSheetService.getProject();
+			response.setProject(project);
+			logger.info("project list");
+	}
+		catch(Exception e) {
+			logger.error("List failed",e);
+			response.setSuccess(false);
+		}
+	return response;
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/getReportlist")
+	public ReportResponse getReportlist(@RequestBody ReportRequest request) {
+		ReportResponse response = new ReportResponse();
+//		System.out.println(" @@@@@@ "+JSONUtil.toJson(request));
+		try {
+			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getId(),request.getDate1(),request.getDate2());
+			response.setReportlist(reportlist);
+			System.out.println(" @@@@@@ "+JSONUtil.toJson(reportlist));
+			logger.info("project list");
+		}
+		catch(Exception e) {
+			logger.error("List failed",e);
+			response.setSuccess(false);
+		}
+	return response;
+	}
+	@RequestMapping(method = RequestMethod.GET, value = "/getActivity")
+	public ReportResponse getActivity() {
+		ReportResponse response = new ReportResponse();
+		try {
+			List<Activity> activity = timeSheetService.getActivity();
+			response.setActivity(activity);
+			logger.info("project list");
+	}
+		catch(Exception e) {
+			logger.error("List failed",e);
+			response.setSuccess(false);
+		}
+	return response;
+}
+	
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/getTimeSheetByUserId")
 	public TimeSheetListResponse getTimeSheetByUserId(@RequestBody TimeSheetListRequest request){

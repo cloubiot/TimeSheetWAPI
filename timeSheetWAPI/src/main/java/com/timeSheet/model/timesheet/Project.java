@@ -1,16 +1,13 @@
-package com.timeSheet.model.dbentity;
-
-import java.util.Date;
+package com.timeSheet.model.timesheet;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class Projects {
-
+public class Project {
+	
 	@Id
 	@GeneratedValue
 	int id;
@@ -19,7 +16,6 @@ public class Projects {
 	String endDate;
 	String description;
     String startDate;
-	
 	public int getId() {
 		return id;
 	}
@@ -32,7 +28,6 @@ public class Projects {
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
-	
 	public String getProjectType() {
 		return projectType;
 	}
@@ -58,6 +53,8 @@ public class Projects {
 		this.startDate = startDate;
 	}
 	
+    
+    
 	
 	
 }

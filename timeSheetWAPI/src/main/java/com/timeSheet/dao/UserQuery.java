@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.timeSheet.clib.util.SecureData;
 import com.timeSheet.model.dbentity.User;
+import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserWithRole;
 
@@ -20,11 +22,16 @@ public class UserQuery {
 	@Autowired
     JdbcTemplate jdbcTemplate;
 	
-	public User login(String email,String password){
+	public List<User> login(String email,String password){
 		String query = "select id,user_name,first_name,last_name,email,phone_number,profile_image_url,active from user "
 						+"where email='"+email+"' and password='"+password+"'";
-		User user = (User) jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper(User.class));
+		List<User> user = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
 		return user;
+	}
+	public User findByIdAndPassword(int id,String password) {
+		String query = "select * FROM cloubiotproject.user where id="+id+" and PASSWORD='"+password+"'";
+		User findByIdAndPassword = (User) jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
+		return findByIdAndPassword;
 	}
 	public User emailIdExists(String email,int userId){
 		String query = " select id,email from user ";
@@ -60,6 +67,7 @@ public class UserQuery {
 		List<UserWithRole> users = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserWithRole.class));
 		return users;
 	}
+	
 	
 	public List<UserWithRole> searchUser(String name,int roleId){
 		String query = "select user_role_mapping.ROLE_ID, user.* from user " 

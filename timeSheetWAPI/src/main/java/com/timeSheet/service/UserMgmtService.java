@@ -37,7 +37,7 @@ public class UserMgmtService {
 		return this.userMgmtRepository.save(user);
 	}
 	
-	public User login(String email,String password){
+	public List<User> login(String email,String password){
 		return this.userQuery.login(email, password);	}
 	
 	

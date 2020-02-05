@@ -61,7 +61,7 @@ public class ProjectController {
 			project.setStartDate(request.getProject().getStartDate());
 			project.setEndDate(request.getProject().getEndDate());
 			project.setProjectType(request.getProject().getProjectType());
-			project.setDescription(request.getProject().getDescription());
+			project.setDescription(request.getProject().getDescription());								
 			projectService.addProject(project);
 			
 			for(int i=0; i < request.getId().length; i++){
