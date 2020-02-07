@@ -2,13 +2,10 @@ package com.timeSheet.model.timesheet;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity
-public class Timesheet {
-
+public class Reportview {
 	@Id
 	@GeneratedValue
 	int id;
@@ -16,11 +13,10 @@ public class Timesheet {
 	Date date;
 	String projectId;
 	String activityId;
-	String task;
+	String projectName;
+	String activity;
 	double hrs;
-	Date creationDate;
-	Date updatedDate;
-	
+	String task;
 	public int getId() {
 		return id;
 	}
@@ -45,37 +41,37 @@ public class Timesheet {
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
 	}
-	
 	public String getActivityId() {
 		return activityId;
 	}
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
 	}
-	
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getActivity() {
+		return activity;
+	}
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
+	public double getHrs() {
+		return hrs;
+	}
+	public void setHrs(double hrs) {
+		this.hrs = hrs;
+	}
 	public String getTask() {
 		return task;
 	}
 	public void setTask(String task) {
 		this.task = task;
 	}
-	public double getHrs() {
-		return hrs;
-	}
-	public void setHrs(double d) {
-		this.hrs = d;
-	}
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-	public Date getUpdatedDate() {
-		return updatedDate;
-	}
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+	
+	
 	
 }

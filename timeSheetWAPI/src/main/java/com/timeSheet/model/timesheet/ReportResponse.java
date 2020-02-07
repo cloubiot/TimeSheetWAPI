@@ -13,6 +13,8 @@ public class ReportResponse extends BaseResponse{
 	List<ReportList> reportlist;
 	
 	List<Activity>  activity;
+	
+	List<Reportview> reportview;
 
 	public List<Report> getReport() {
 		return report;
@@ -44,6 +46,14 @@ public class ReportResponse extends BaseResponse{
 
 	public void setActivity(List<Activity> activity) {
 		this.activity = activity;
+	}
+
+	public List<Reportview> getReportview() {
+		return reportview;
+	}
+
+	public void setReportview(List<Reportview> reportview) {
+		this.reportview = reportview;
 	}
 
 	

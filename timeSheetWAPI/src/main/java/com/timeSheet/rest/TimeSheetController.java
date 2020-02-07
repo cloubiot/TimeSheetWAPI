@@ -30,6 +30,7 @@ import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.timesheet.ReportList;
 import com.timeSheet.model.timesheet.ReportRequest;
 import com.timeSheet.model.timesheet.ReportResponse;
+import com.timeSheet.model.timesheet.Reportview;
 import com.timeSheet.model.timesheet.TimeSheetList;
 import com.timeSheet.model.timesheet.TimeSheetListRequest;
 import com.timeSheet.model.timesheet.TimeSheetListResponse;
@@ -98,20 +99,39 @@ public class TimeSheetController {
 	SuccessIDResponse response = new SuccessIDResponse();
 	System.out.println("++++"+JSONUtil.toJson(request));
 	try {
+		
 		for( int i = 0;i < request.getTimeSheet().length;i++) {
+			Timesheet editTimesheet = timeSheetService.getById(request.getTimeSheet()[i].getId());
+//			System.out.println(JSONUtil.toJson("#####"+editTimesheet.getId()));
+			if(editTimesheet == null) {
 	        Timesheet timesheet = new Timesheet();
 			timesheet.setDate(request.getTimeSheet()[i].getDate());
 			timesheet.setProjectId(request.getTimeSheet()[i].getProjectId());
 			timesheet.setActivityId(request.getTimeSheet()[i].getActivityId());
 			timesheet.setTask(request.getTimeSheet()[i].getTask());
 			timesheet.setHrs(request.getTimeSheet()[i].getHrs());
-			timesheet.setUserId(request.getUserTd());
-			timesheet.setCreationdate(new Date());
+			timesheet.setUserId(request.getUserId());
+			timesheet.setCreationDate(new Date());
+			timesheet.setUpdatedDate(new Date());
 			timeSheetService.saveTimeSheet(timesheet);
+			
 //			System.out.println("####"+JSONUtil.toJson(timesheet));
-			logger.info("TimeSheet added");
+			}
+			else {
+				
+				editTimesheet.setDate(request.getTimeSheet()[i].getDate());
+				editTimesheet.setProjectId(request.getTimeSheet()[i].getProjectId());
+				editTimesheet.setActivityId(request.getTimeSheet()[i].getActivityId());
+				editTimesheet.setTask(request.getTimeSheet()[i].getTask());
+				editTimesheet.setHrs(request.getTimeSheet()[i].getHrs());
+				editTimesheet.setUserId(request.getUserId());
+				editTimesheet.setUpdatedDate(new Date());
+				timeSheetService.saveTimeSheet(editTimesheet);
+			}
 
 	}
+	List<Report> timereport = timeSheetService.getReport(request.getUserId());
+	response.setReport(timereport);
 	}
 	catch(Exception e){
 		logger.error("Time sheet fail",e);
@@ -129,7 +149,7 @@ public class TimeSheetController {
 		try{
 			List<Report> reportview = timeSheetService.getReport(request.getUserId());
 			response.setReport(reportview);
-			System.out.println(JSONUtil.toJson(reportview));
+//			System.out.println(JSONUtil.toJson(reportview));
 			logger.info("employee Report");
 		}
 		catch(Exception e){
@@ -152,7 +172,21 @@ public class TimeSheetController {
 		}
 	return response;
 	}
-
+	@RequestMapping(method = RequestMethod.POST, value = "/getReportview")
+	public ReportResponse getReportview(@RequestBody ReportRequest request){
+		ReportResponse response = new ReportResponse();
+		try{
+			List<Reportview> reportviews = timeSheetService.getReportview(request.getUserId(),request.getDate());
+			response.setReportview(reportviews);
+			System.out.println(JSONUtil.toJson(reportviews));
+			logger.info("employee Report");
+		}
+		catch(Exception e){
+			logger.error("List failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
 	@RequestMapping(method = RequestMethod.POST, value = "/getReportlist")
 	public ReportResponse getReportlist(@RequestBody ReportRequest request) {
 		ReportResponse response = new ReportResponse();

@@ -16,6 +16,7 @@ import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.timesheet.ReportList;
+import com.timeSheet.model.timesheet.Reportview;
 import com.timeSheet.model.timesheet.TimeSheetList;
 import com.timeSheet.model.timesheet.Timesheet;
 import com.timeSheet.model.usermgmt.UserWithRole;
@@ -42,6 +43,9 @@ public class TimeSheetServcie {
 	public Timesheet saveTimeSheet(Timesheet timesheet){
 		return this.timeSheetRepository.save(timesheet);
 	}
+	public Timesheet getById(int id){
+		return this.timeSheetRepository.findById(id);
+	}
 	
 	public List<TimeSheetList> getTimeSheetByUserId(int userId,int projectId,int roleId){
 		return this.timeSheetQuery.getTimeSheetByUserId(userId,projectId,roleId);
@@ -57,6 +61,9 @@ public class TimeSheetServcie {
 	
 	public List<Report> getReport(int  userId){
 		return this.timeSheetQuery.getReport(userId);
+	}
+	public List<Reportview> getReportview(int userId,Date date){
+		return this.timeSheetQuery.getReportview(userId,date);
 	}
 	
 	public List<Timesheet> findUpdateHrs(String project,String activity,Date date,int userId){

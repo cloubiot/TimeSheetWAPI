@@ -11,14 +11,14 @@ public class TimeSheetRequest {
 
 	Timesheet[] timeSheet;
 	
-	int userTd;
+	int userId;
 	
 	
-	public int getUserTd() {
-		return userTd;
+	public int getUserId() {
+		return userId;
 	}
-	public void setUserTd(int userTd) {
-		this.userTd = userTd;
+	public void setUserTd(int userId) {
+		this.userId = userId;
 	}
 	public Timesheet[] getTimeSheet() {
 		return timeSheet;

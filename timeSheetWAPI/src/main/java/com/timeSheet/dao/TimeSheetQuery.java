@@ -15,6 +15,7 @@ import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.timesheet.ReportList;
+import com.timeSheet.model.timesheet.Reportview;
 import com.timeSheet.model.timesheet.TimeSheetList;
 import com.timeSheet.model.timesheet.Timesheet;
 import com.timeSheet.model.usermgmt.UserWithRole;
@@ -47,10 +48,17 @@ public class TimeSheetQuery {
 		return totalHrs;
 	}
 	public List<Report> getReport(int userId){
-		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID ="+userId+" and date between curdate() - interval 7 day and curdate()";
-//		System.out.println("&&&&&"+query);	
+		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID ="+userId+" and date  <= curdate() - INTERVAL DAYOFWEEK(curdate())-7 DAY and date > curdate() - INTERVAL DAYOFWEEK(curdate())-0 DAY";
+		System.out.println("&&&&&"+query);	
 		List<Report> getReport = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
 		return getReport;
+	}
+	
+	public List<Reportview> getReportview(int userId,Date date){
+		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+userId+" and date  <= '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-7 DAY and date > '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-0 DAY ";
+//		System.out.println("&&&&&"+query);	
+		List<Reportview> getReportview = jdbcTemplate.query(query, new BeanPropertyRowMapper(Reportview.class));
+		return getReportview;
 	}
 	
 	public List<TimeSheetList> getTimeSheetPagination(int userId,int projectId, int roleId, int from, int to){
