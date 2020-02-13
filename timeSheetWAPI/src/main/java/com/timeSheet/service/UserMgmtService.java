@@ -63,8 +63,8 @@ public class UserMgmtService {
 		return this.userMgmtRepository.findById(id);
 	}
 	
-	public List<UserWithRole> getUserList(){
-		return this.userQuery.getUserList();
+	public List<UserWithRole> getUserList(int projectId){
+		return this.userQuery.getUserList(projectId);
 	}
 	
 	public List<UserWithRole> searchUser(String name,int roleId){

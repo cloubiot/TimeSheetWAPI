@@ -12,6 +12,8 @@ public class UserWithRole {
 	String phoneNumber;
 	String profileImageUrl;
 	int roleId;
+	String isChecked;
+	
 	public int getId() {
 		return id;
 	}
@@ -72,6 +74,12 @@ public class UserWithRole {
 	}
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+	public String getIsChecked() {
+		return isChecked;
+	}
+	public void setIsChecked(String isChecked) {
+		this.isChecked = isChecked;
 	}
 	
 }

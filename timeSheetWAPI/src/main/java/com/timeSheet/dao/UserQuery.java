@@ -60,10 +60,10 @@ public class UserQuery {
 		return roleId;
 	}
 	
-	public List<UserWithRole> getUserList(){
-		String query = "select user_role_mapping.ROLE_ID, user.* from user " 
-						+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id ";
-//						+"where user_role_mapping.ROLE_ID= "+roleId;
+	public List<UserWithRole> getUserList(int projectId){
+		String query = "select user_role_mapping.ROLE_ID,project_user_mapping.is_checked, user.* from user " 
+						+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
+						+"left join project_user_mapping on project_user_mapping.USER_ID = user.id ";
 		
 		List<UserWithRole> users = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserWithRole.class));
 		return users;
@@ -135,7 +135,7 @@ public class UserQuery {
 	public List<UserDetail> getUserByProjectId(int projectId){
 		String query = "select user.id,user.user_Name,user.email,user.phone_number from user "+
 							"inner join project_user_mapping on project_user_mapping.user_id = user.id "+
-							" where project_user_mapping.project_id = "+projectId;
+							" where project_user_mapping.is_checked = 'true' and project_user_mapping.project_id = "+projectId;
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}

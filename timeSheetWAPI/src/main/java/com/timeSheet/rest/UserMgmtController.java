@@ -86,7 +86,8 @@ public class UserMgmtController {
 				user.setPassword(sd.encrypt(newPassword.generateRandomString()));
 				user.setActive("true");
 			}
-			
+			String password = sd.decrypt(user.getPassword());
+			response.setPassword(password);
 			user.setUserName(request.getUserName());
 			user.setFirstName(request.getFirstName());
 			user.setLastName(request.getLastName());
@@ -344,11 +345,11 @@ public class UserMgmtController {
 		}
 		return response;
 }
-	@RequestMapping(method = RequestMethod.GET, value = "/getUserList")
-	public UserListResponse getUserList(){
+	@RequestMapping(method = RequestMethod.GET, value = "/getUserList/{projectId}")
+	public UserListResponse getUserList(@PathVariable int projectId){
 		UserListResponse response = new UserListResponse();
 		try{
-			List<UserWithRole> user = userMgmtService.getUserList();
+			List<UserWithRole> user = userMgmtService.getUserList(projectId);
 			response.setUser(user);
 			logger.info("user List");
 		}

@@ -22,7 +22,8 @@ public class ReportList {
 	String task;
 	Date date1;
 	Date date2;
-		
+	String userName;
+	
 	public int getId() {
 		return id;
 	}
@@ -89,6 +90,12 @@ public class ReportList {
 	}
 	public void setDate2(Date date2) {
 		this.date2 = date2;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 

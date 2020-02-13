@@ -136,6 +136,7 @@ public class ProjectController {
 				}
 				projectUser.setProjectId(request.getProjectId());
 				projectUser.setUserId(id);
+				projectUser.setIsChecked("true");
 				projectService.saveMapping(projectUser);
 			}
 			logger.info("project mapping to user");
@@ -240,7 +241,8 @@ public class ProjectController {
 		SuccessIDResponse response = new SuccessIDResponse();
 		try{
 			ProjectUserMapping mapping = projectService.getByProjectAndUserId(request.getProjectId(), request.getUserId());
-			mapping.setIsChecked("false");
+			mapping.setIsChecked(null);
+			projectService.saveMapping(mapping);
 			logger.info("delete");
 		}
 		catch(Exception e){

@@ -100,14 +100,24 @@ public class TimeSheetQuery {
 	}
 	public List<ReportList> getReportlist(int id,Date date1,Date date2,int projectId,int activityId ){
 		String query = null;
-		if(activityId == 0 && projectId != 0) {
-		    query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and PROJECT_ID ="+projectId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
-		}else if(projectId == 0 && activityId != 0) {
-			query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and ACTIVITY_ID="+activityId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
-		}else {
-			query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+		if(activityId == 0 && projectId != 0 && id != 0) {
+		    query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where USER_ID = "+id+" and PROJECT_ID ="+projectId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+		}else if(projectId == 0 && activityId != 0 && id != 0) {
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where USER_ID = "+id+" and ACTIVITY_ID="+activityId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+		}else if(id == 0 && projectId != 0 && activityId != 0) {
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where PROJECT_ID ="+projectId+" and ACTIVITY_ID="+activityId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+	    }else if(id == 0 && projectId == 0 && activityId != 0) {
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where ACTIVITY_ID="+activityId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+	    }else if(id == 0 && projectId != 0 && activityId == 0) {
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where PROJECT_ID ="+projectId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+	    }else if(id == 0 && projectId == 0 && activityId == 0) {
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where DATE between '"+date1+"' and '"+date2+"' order by date ";
+	    }else if(id != 0 && projectId != 0 && activityId != 0) {
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where USER_ID = "+id+" and PROJECT_ID ="+projectId+" and ACTIVITY_ID="+activityId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+	    }else{
+			query = "select USER_ID,u.USER_NAME,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) inner join user as u on u.id = timesheet.USER_ID where USER_ID = "+id+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
 		}
-//		System.out.println("%%%%%"+query);
+		System.out.println("%%%%%"+query);
 		
 		List<ReportList> getReportlist = jdbcTemplate.query(query, new BeanPropertyRowMapper(ReportList.class));
 		return getReportlist;
