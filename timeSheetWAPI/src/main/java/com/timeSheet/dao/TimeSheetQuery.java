@@ -48,14 +48,14 @@ public class TimeSheetQuery {
 		return totalHrs;
 	}
 	public List<Report> getReport(int userId){
-		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID ="+userId+" and date  <= curdate() - INTERVAL DAYOFWEEK(curdate())-7 DAY and date > curdate() - INTERVAL DAYOFWEEK(curdate())-0 DAY";
-		System.out.println("&&&&&"+query);	
+		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID ="+userId+" and date  <= curdate() - INTERVAL DAYOFWEEK(curdate())-7 DAY and date > curdate() - INTERVAL DAYOFWEEK(curdate())-0 DAY order by date";
+//		System.out.println("&&&&&"+query);	
 		List<Report> getReport = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
 		return getReport;
 	}
 	
 	public List<Reportview> getReportview(int userId,Date date){
-		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+userId+" and date  <= '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-7 DAY and date > '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-0 DAY ";
+		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+userId+" and date  <= '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-7 DAY and date > '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-0 DAY order by date";
 //		System.out.println("&&&&&"+query);	
 		List<Reportview> getReportview = jdbcTemplate.query(query, new BeanPropertyRowMapper(Reportview.class));
 		return getReportview;
@@ -98,14 +98,16 @@ public class TimeSheetQuery {
 		List<Timesheet> findActivity = jdbcTemplate.query(query, new BeanPropertyRowMapper(Timesheet.class));
 		return findActivity;
 	}
-	public List<ReportList> getReportlist(int id,Date date1,Date date2 ){
-		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and DATE between '"+date1+"' and '"+date2+"' ";
-//		System.out.println("%%%%%"+query);
-//		System.out.println("%%%%%"+date2);
-		if(date2 == new Date(id)) {
-			query+="select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID ="+id+"and DATE >='"+date1+"'";
-			
+	public List<ReportList> getReportlist(int id,Date date1,Date date2,int projectId,int activityId ){
+		String query = null;
+		if(activityId == 0 && projectId != 0) {
+		    query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and PROJECT_ID ="+projectId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+		}else if(projectId == 0 && activityId != 0) {
+			query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and ACTIVITY_ID="+activityId+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
+		}else {
+			query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK  from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+id+" and DATE between '"+date1+"' and '"+date2+"' order by date ";
 		}
+//		System.out.println("%%%%%"+query);
 		
 		List<ReportList> getReportlist = jdbcTemplate.query(query, new BeanPropertyRowMapper(ReportList.class));
 		return getReportlist;

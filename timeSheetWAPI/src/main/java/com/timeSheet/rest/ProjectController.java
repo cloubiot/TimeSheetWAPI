@@ -49,7 +49,7 @@ public class ProjectController {
 	public SuccessIDResponse addAndUpdateProject(@RequestBody AddProjectRequest request){
 		SuccessIDResponse response = new SuccessIDResponse();
 		try{
-			System.out.println("Request second"+JSONUtil.toJson(request));
+//			System.out.println("Request second"+JSONUtil.toJson(request));
 			Projects project = new Projects();
 			ProjectUserMapping projectUser = new ProjectUserMapping(); 
 			project = projectService.getProjectById(request.getProject().getId());
@@ -123,8 +123,8 @@ public class ProjectController {
 		SuccessIDResponse response = new SuccessIDResponse();
 		try{
 			ProjectUserMapping projectUser = new ProjectUserMapping(); 
-			System.out.println("Request "+JSONUtil.toJson(request));
-			System.out.println("Request value"+request.getId());
+//			System.out.println("Request "+JSONUtil.toJson(request));
+//			System.out.println("Request value"+request.getId());
 			for(int i=0; i < request.getId().length; i++){
 		//		System.out.println("Request second"+request.getId()[i]);
 				String value = request.getId()[i];

@@ -24,7 +24,7 @@ public class UserQuery {
 	
 	public List<User> login(String email,String password){
 		String query = "select id,user_name,first_name,last_name,email,phone_number,profile_image_url,active from user "
-						+"where email='"+email+"' and password='"+password+"'";
+						+"where (email='"+email+"' or USER_NAME='"+email+"') and password='"+password+"'";
 		List<User> user = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
 		return user;
 	}
@@ -64,6 +64,7 @@ public class UserQuery {
 		String query = "select user_role_mapping.ROLE_ID, user.* from user " 
 						+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id ";
 //						+"where user_role_mapping.ROLE_ID= "+roleId;
+		
 		List<UserWithRole> users = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserWithRole.class));
 		return users;
 	}
@@ -81,6 +82,7 @@ public class UserQuery {
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
 				+"inner join user_role on user_role.ROLE = user_role_mapping.ROLE_ID";
+		System.out.println("####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}

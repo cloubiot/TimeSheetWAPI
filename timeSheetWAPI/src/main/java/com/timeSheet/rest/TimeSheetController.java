@@ -178,7 +178,7 @@ public class TimeSheetController {
 		try{
 			List<Reportview> reportviews = timeSheetService.getReportview(request.getUserId(),request.getDate());
 			response.setReportview(reportviews);
-			System.out.println(JSONUtil.toJson(reportviews));
+//			System.out.println(JSONUtil.toJson(reportviews));
 			logger.info("employee Report");
 		}
 		catch(Exception e){
@@ -192,9 +192,9 @@ public class TimeSheetController {
 		ReportResponse response = new ReportResponse();
 //		System.out.println(" @@@@@@ "+JSONUtil.toJson(request));
 		try {
-			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getId(),request.getDate1(),request.getDate2());
+			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getId(),request.getDate1(),request.getDate2(),request.getProjectId(),request.getActivityId());
 			response.setReportlist(reportlist);
-			System.out.println(" @@@@@@ "+JSONUtil.toJson(reportlist));
+//			System.out.println(" @@@@@@ "+JSONUtil.toJson(reportlist));
 			logger.info("project list");
 		}
 		catch(Exception e) {

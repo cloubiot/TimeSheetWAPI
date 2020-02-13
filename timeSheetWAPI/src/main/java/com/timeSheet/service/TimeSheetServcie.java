@@ -78,8 +78,8 @@ public class TimeSheetServcie {
 		return this.timeSheetQuery.getProject();
 		
 	}
-	public List<ReportList> getReportlist(int id,Date date1,Date date2 ){
-		return this.timeSheetQuery.getReportlist(id,date1,date2);
+	public List<ReportList> getReportlist(int id,Date date1,Date date2,int projectId,int activityId ){
+		return this.timeSheetQuery.getReportlist(id,date1,date2,projectId,activityId);
 	}
 	
 	public List<Activity> getActivity() {

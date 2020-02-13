@@ -93,6 +93,7 @@ public class UserMgmtController {
 			user.setEmail(request.getEmail());
 			user.setPhoneNumber(request.getPhoneNumber());
 			user.setActive(request.getActive());
+			user.setId(request.getId());
 			userMgmtService.saveUser(user);
 			roleMapping = userMgmtService.getRoleByUserId(user.getId());
 			if(roleMapping == null){
@@ -114,10 +115,10 @@ public class UserMgmtController {
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
 		LoginResponse response = new LoginResponse();
 		try{
-			System.out.println("login " +request.getUserName()+" pass "+request.getPassword());
+//			System.out.println("login " +request.getUserName()+" pass "+request.getPassword());
 			SecureData sd = new SecureData();
 			String encryptedPassword = sd.encrypt(request.getPassword());
-			System.out.println(encryptedPassword);
+//			System.out.println(encryptedPassword);
 			UserProfile userProfile = new UserProfile();
 			List<User> user = userMgmtService.login(request.getUserName(), encryptedPassword);
 			if(!user.isEmpty()){
@@ -285,15 +286,15 @@ public class UserMgmtController {
 		SuccessIDResponse response = new SuccessIDResponse();
 //		System.out.println("#####"+JSONUtil.toJson(request));
 		try{
-			System.out.println(request.getUserId());
+//			System.out.println(request.getUserId());
 			SecureData sd = new SecureData();
 			String oldPassword = sd.encrypt(request.getOldPassword());
-			System.out.println(oldPassword);
+//			System.out.println(oldPassword);
 			SecureData sd1 = new SecureData();
 			String newPassword = sd1.encrypt(request.getNewPassword());
-			System.out.println(newPassword);
+//			System.out.println(newPassword);
 			User user = userMgmtService.getByIdAndPassword(request.getUserId(), oldPassword);
-			System.out.println("###"+JSONUtil.toJson(user));
+//			System.out.println("###"+JSONUtil.toJson(user));
 			if(user == null){
 				response.setSuccess(false);
 			}
@@ -364,7 +365,7 @@ public class UserMgmtController {
 		try{
 			List<UserWithRole> user = userMgmtService.searchUser(request.getName(),request.getRoleId());
 			response.setUser(user);
-			System.out.println(JSONUtil.toJson(user));
+//			System.out.println(JSONUtil.toJson(user));
 			logger.info("search user List");
 		}
 		catch(Exception e){
@@ -379,7 +380,7 @@ public class UserMgmtController {
 		UserDetailResponse response = new UserDetailResponse();
 		try{
 			List<UserDetail> userDetail = userMgmtService.getUserDetail();
-			System.out.println(JSONUtil.toJson(userDetail));
+//			System.out.println(JSONUtil.toJson(userDetail));
 			response.setUserDetail(userDetail);
 			logger.info("user Details");
 		}
@@ -415,7 +416,7 @@ public class UserMgmtController {
 			User user = userMgmtService.getUserById(id);
 			response.setUser(user);
 			UserRoleMapping userRole = userMgmtService.getRoleByUserId(id);
-			System.out.println(" "+JSONUtil.toJson(userRole));
+//			System.out.println(" "+JSONUtil.toJson(userRole));
 			response.setRoleId(userRole.getRoleId());
 			logger.info("Get full detail for user");
 		}
@@ -443,7 +444,7 @@ public class UserMgmtController {
 				}
 			}
 			List<UserDetail> userDetail = userMgmtService.getUserByPagination(from, to);
-			System.out.println(JSONUtil.toJson(userDetail));
+//			System.out.println(JSONUtil.toJson(userDetail));
 			response.setUserDetail(userDetail);
 			logger.info("user Details");
 		}

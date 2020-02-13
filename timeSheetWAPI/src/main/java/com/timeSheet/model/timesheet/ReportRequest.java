@@ -15,7 +15,10 @@ public class ReportRequest {
     int userId;
     int id;
     String task;
-	
+    int projectId;
+	int activityId;
+	ReportList reportList;
+
 	public Date getDate1() {
 		return date1;
 	}
@@ -64,8 +67,31 @@ public class ReportRequest {
 	public void setTask(String task) {
 		this.task = task;
 	}
+
+	public int getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(int projectId) {
+		this.projectId = projectId;
+	}
+
+	public int getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(int activityId) {
+		this.activityId = activityId;
+	}
+
+	public ReportList getReportList() {
+		return reportList;
+	}
+
+	public void setReportList(ReportList reportList) {
+		this.reportList = reportList;
+	}
       
-	
 	
 
 }
