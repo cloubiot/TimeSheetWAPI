@@ -70,8 +70,8 @@ public class UserMgmtService {
 	public List<UserWithRole> searchUser(String name,int roleId){
 		return this.userQuery.searchUser(name,roleId);
 	}
-	public List<UserDetail> getUserDetail(){
-		return this.userQuery.getUserDetail();
+	public List<UserDetail> getUserDetail(int id){
+		return this.userQuery.getUserDetail(id);
 	}
 	
 	public UserRoleMapping saveUserRole(UserRoleMapping userRole){
@@ -80,8 +80,8 @@ public class UserMgmtService {
 	public UserRoleMapping getRoleByUserId(int id){
 		return this.userRoleMappingRepository.findByUserId(id);
 	}
-	public List<UserDetail> getUserByPagination(int from,int to){
-		return this.userQuery.getPaginationForUser(from, to);
+	public List<UserDetail> getUserByPagination(int from,int to,String email,String name){
+		return this.userQuery.getPaginationForUser(from, to,email,name);
 	}
 	public List<UserDetail> searchUserDetail(String name,String mailId,String phoneNumber,String role,String active){
 		return this.userQuery.searchUserDetail(name, mailId, phoneNumber, role,active);

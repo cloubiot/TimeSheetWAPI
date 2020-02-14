@@ -1,3 +1,4 @@
-GitRepositoriesView.GitDirectories=C\:\\WS\\.git;
-GitRepositoriesView.GitDirectories.relative=C\:\\WS\\.git;
+GitRepositoriesView.GitDirectories=C\:\\TS\\TimeSheetWAPI\\.git;C\:\\WS\\.git;
+GitRepositoriesView.GitDirectories.relative=.git;C\:\\WS\\.git;
+core_autoIgnoreDerivedResources=false
 eclipse.preferences.version=1

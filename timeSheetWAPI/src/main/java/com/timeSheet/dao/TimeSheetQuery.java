@@ -81,7 +81,7 @@ public class TimeSheetQuery {
 	}
 	
 	public List<Activity> getActivity(){
-		String query = "SELECT * FROM cloubiotproject.activities";
+		String query = "SELECT * FROM activities";
 		List<Activity> getActivity = jdbcTemplate.query(query, new BeanPropertyRowMapper(Activity.class));
 		return getActivity;
 	

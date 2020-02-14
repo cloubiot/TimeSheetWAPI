@@ -1,5 +1,0 @@
-package com.timeSheet.model.dbentity;
-
-public class UserRole {
-
-}

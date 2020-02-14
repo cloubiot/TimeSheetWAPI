@@ -1,5 +1,0 @@
-package com.timeSheet.dao;
-
-public class UserRoleRepository {
-
-}

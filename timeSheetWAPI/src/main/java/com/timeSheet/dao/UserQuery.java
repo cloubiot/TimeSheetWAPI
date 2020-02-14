@@ -61,10 +61,10 @@ public class UserQuery {
 	}
 	
 	public List<UserWithRole> getUserList(int projectId){
-		String query = "select user_role_mapping.ROLE_ID,project_user_mapping.is_checked, user.* from user " 
+		String query = "select user_role_mapping.ROLE_ID,case when PROJECT_ID = "+projectId+" and project_user_mapping.IS_CHECKED='true' then 'true' end as is_checked,user.* from user " 
 						+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
-						+"left join project_user_mapping on project_user_mapping.USER_ID = user.id ";
-		
+						+"left join project_user_mapping on project_user_mapping.USER_ID = user.id and PROJECT_ID ="+projectId+" where ACTIVE != 'false'";
+		System.out.println("@@@@@@"+query);
 		List<UserWithRole> users = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserWithRole.class));
 		return users;
 	}
@@ -78,20 +78,29 @@ public class UserQuery {
 		return users;
 	}
 	
-	public List<UserDetail> getUserDetail(){
+	public List<UserDetail> getUserDetail(int id){
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
-				+"inner join user_role on user_role.ROLE = user_role_mapping.ROLE_ID";
+				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID ";
+				if(id == 0) {
+					query += "where ACTIVE != 'false' and ROLE_ID != 0";
+				}
 		System.out.println("####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}
 	
-	public List<UserDetail> getPaginationForUser(int from, int to){
+	public List<UserDetail> getPaginationForUser(int from, int to,String email,String name){
+		if(name == null)
+			name="";
+		if(email== null)
+			email="";
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
-				+"inner join user_role on user_role.ROLE = user_role_mapping.ROLE_ID";
+				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
+				+"where FIRST_NAME like '%"+name+"%' and EMAIL like '%"+email+"%' and (ACTIVE != 'false')";
 		query+=" limit "+from+" ,"+to;
+//		System.out.println("#####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}
@@ -109,12 +118,9 @@ public class UserQuery {
 			active="";
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
-				+"inner join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
+				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
 				+"where user.first_name like '%"+name+"%'"
-				+" and user.email like '%"+mailId+"%'"
-				+" and user.phone_Number like '%"+phoneNumber+"%'"
-				+" and user_role.desc like '%"+role+"%'"
-				+" and user.active like '%"+active+"%'";
+				+" and user.email like '%"+mailId+"%'";
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}

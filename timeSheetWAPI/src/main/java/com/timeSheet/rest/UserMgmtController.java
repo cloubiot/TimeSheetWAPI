@@ -51,6 +51,7 @@ import com.timeSheet.model.usermgmt.UserDetailResponse;
 import com.timeSheet.model.usermgmt.UserListResponse;
 import com.timeSheet.model.usermgmt.UserNameExistsRequest;
 import com.timeSheet.model.usermgmt.UserNameExistsResponse;
+import com.timeSheet.model.usermgmt.UserPaginationRequest;
 import com.timeSheet.model.usermgmt.UserProfile;
 import com.timeSheet.model.usermgmt.UserSignupRequest;
 import com.timeSheet.model.usermgmt.UserWithRole;
@@ -84,10 +85,10 @@ public class UserMgmtController {
 			if(user == null ){
 				user = new User();
 				user.setPassword(sd.encrypt(newPassword.generateRandomString()));
+				String password = sd.decrypt(user.getPassword());
+				response.setPassword(password);
 				user.setActive("true");
 			}
-			String password = sd.decrypt(user.getPassword());
-			response.setPassword(password);
 			user.setUserName(request.getUserName());
 			user.setFirstName(request.getFirstName());
 			user.setLastName(request.getLastName());
@@ -376,11 +377,11 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/getUserDetails")
-	public UserDetailResponse getUserDetail(){
+	@RequestMapping(method = RequestMethod.GET, value = "/getUserDetails/{id}")
+	public UserDetailResponse getUserDetail(@PathVariable int id){
 		UserDetailResponse response = new UserDetailResponse();
 		try{
-			List<UserDetail> userDetail = userMgmtService.getUserDetail();
+			List<UserDetail> userDetail = userMgmtService.getUserDetail(id);
 //			System.out.println(JSONUtil.toJson(userDetail));
 			response.setUserDetail(userDetail);
 			logger.info("user Details");
@@ -428,13 +429,13 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/getUserByPagination/{value}")
-	public UserDetailResponse getUserByPagination(@PathVariable int value){
+	@RequestMapping(method = RequestMethod.POST, value="/getUserByPagination")
+	public UserDetailResponse getUserByPagination(@RequestBody UserPaginationRequest request){
 		UserDetailResponse response = new UserDetailResponse();
 		try{
 			int from=1;
 			int to=10;
-			for(int i=1;i<=value;i++){
+			for(int i=1;i<=request.getValue();i++){
 				if(i==1){
 					from=0;
 					to=10;
@@ -444,7 +445,7 @@ public class UserMgmtController {
 					to+=10;
 				}
 			}
-			List<UserDetail> userDetail = userMgmtService.getUserByPagination(from, to);
+			List<UserDetail> userDetail = userMgmtService.getUserByPagination(from, to,request.getEmail(),request.getName());
 //			System.out.println(JSONUtil.toJson(userDetail));
 			response.setUserDetail(userDetail);
 			logger.info("user Details");

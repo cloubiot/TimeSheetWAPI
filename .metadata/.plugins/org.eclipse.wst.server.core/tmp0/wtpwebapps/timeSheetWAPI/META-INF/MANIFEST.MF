@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: timeSheetWAPI
 Implementation-Version: 1.0.0
-Built-By: lakshmanan
+Built-By: E7450
 Implementation-Vendor-Id: com.beanstree.dcsolar
-Build-Jdk: 1.8.0_161
+Build-Jdk: 1.8.0_181
 Implementation-URL: http://projects.spring.io/spring-boot/timeSheetWAP
  I/
 Created-By: Maven Integration for Eclipse

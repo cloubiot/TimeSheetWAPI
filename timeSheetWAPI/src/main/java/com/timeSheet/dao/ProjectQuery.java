@@ -32,8 +32,14 @@ public class ProjectQuery {
 		List<ProjectDetail> projects = jdbcTemplate.query(query, new BeanPropertyRowMapper(ProjectDetail.class));
 		return projects;
 	}
-	public List<Projects> projectPagination(int from,int to){
-		String query ="select * from projects limit "+from+" ,"+to;
+	public List<Projects> projectPagination(int from,int to,String name,String type){
+		if(name == null)
+			name="";
+		if(type== null)
+			type="";
+		String query ="select * from projects "
+				+" where project_name like '%"+name+"%'"
+				+" and project_type like '%"+type+"%' limit "+from+" ,"+to;
 		List<Projects> projects = jdbcTemplate.query(query, new BeanPropertyRowMapper(Projects.class));
 		return projects;
 	}
@@ -60,7 +66,17 @@ public class ProjectQuery {
 		List<ProjectDetail> projects = jdbcTemplate.query(query, new BeanPropertyRowMapper(ProjectDetail.class));
 		return projects;
 	}
-	
+	public List<ProjectDetail> searchProjectDetail(String name,String type){
+		if(name == null)
+			name="";
+		if(type== null)
+			type="";
+		String query = "select * from projects"
+				+" where project_name like '%"+name+"%'"
+				+" and project_type like '%"+type+"%'";
+		List<ProjectDetail> searchProject = jdbcTemplate.query(query, new BeanPropertyRowMapper(ProjectDetail.class));
+		return searchProject;
+	}
 	public void removeMember(int projectId, int userId){
 		String query = "Delete from  project_user_mapping where user_id="+userId+" and project_id="+projectId;
 		jdbcTemplate.execute(query);

@@ -1,5 +1,0 @@
-package com.projectLog.model.project;
-
-public class GetCountResponse {
-
-}

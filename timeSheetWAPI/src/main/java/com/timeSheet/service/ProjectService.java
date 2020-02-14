@@ -44,8 +44,8 @@ public class ProjectService {
 	public ProjectUserMapping saveMapping(ProjectUserMapping mapping){
 		return this.mappingRepository.save(mapping);
 	}
-	public List<Projects> projectPagination(int from,int to){
-		return this.projectQuery.projectPagination(from, to);
+	public List<Projects> projectPagination(int from,int to,String name,String type){
+		return this.projectQuery.projectPagination(from, to,name,type);
 	}
 	public List<UserHour> getUserHour(int projectId){
 		return this.projectQuery.getUserHour(projectId);
@@ -53,7 +53,9 @@ public class ProjectService {
 	public List<ProjectDetail> getProjectListPagination(int userId,int roleId,int from, int to){
 		return this.projectQuery.getProjectListPagination(userId,roleId, from, to);
 	}
-	
+	public List<ProjectDetail> searchProjectDetail(String name,String type){
+		return this.projectQuery.searchProjectDetail(name,type);
+	}
 	public Long getCount(){
 		return this.projectRepository.count();
 	}

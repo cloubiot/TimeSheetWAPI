@@ -5,6 +5,8 @@ public class ProjectPaginatoinRequest {
 	int value;
 	int userId;
 	int roleId;
+	String name;
+	String type;
 
 	public int getValue() {
 		return value;
@@ -28,6 +30,22 @@ public class ProjectPaginatoinRequest {
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

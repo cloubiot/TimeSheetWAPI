@@ -26,7 +26,11 @@ import com.timeSheet.model.project.ProjectListResponse;
 import com.timeSheet.model.project.ProjectPaginationResponse;
 import com.timeSheet.model.project.ProjectPaginatoinRequest;
 import com.timeSheet.model.project.RemoveMemberRequest;
+import com.timeSheet.model.project.SearchProjectRequest;
 import com.timeSheet.model.timesheet.TimeSheetRequest;
+import com.timeSheet.model.usermgmt.SearchUserDetailRequest;
+import com.timeSheet.model.usermgmt.UserDetail;
+import com.timeSheet.model.usermgmt.UserDetailResponse;
 import com.timeSheet.model.usermgmt.UserHour;
 import com.timeSheet.model.usermgmt.UserHourResponse;
 import com.timeSheet.service.ProjectService;
@@ -164,7 +168,7 @@ public class ProjectController {
 					to+=10;
 				}
 			}
-			List<Projects> projects = projectService.projectPagination(from, to);
+			List<Projects> projects = projectService.projectPagination(from, to,request.getName(),request.getType());
 			response.setProjects(projects);
 			logger.info("Project Pagination");
 		}
@@ -175,6 +179,21 @@ public class ProjectController {
 		return response;
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, value="/searchProject")
+	public ProjectListResponse searchUserDetail(@RequestBody SearchProjectRequest request){
+		ProjectListResponse response = new ProjectListResponse();
+		try{
+			List<ProjectDetail> projectDetail = projectService.searchProjectDetail(request.getProjectDetail().getProjectName(),request.getProjectDetail().getProjectType());
+			response.setProjects(projectDetail);
+			logger.info("search project detail");
+		}
+		catch(Exception e){
+			logger.error("search project failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
 	@RequestMapping(method = RequestMethod.GET, value = "/getUserHourByProject/{id}")
 	public UserHourResponse getUserHourByProject(@PathVariable int id){
 		UserHourResponse response = new UserHourResponse();
@@ -241,7 +260,7 @@ public class ProjectController {
 		SuccessIDResponse response = new SuccessIDResponse();
 		try{
 			ProjectUserMapping mapping = projectService.getByProjectAndUserId(request.getProjectId(), request.getUserId());
-			mapping.setIsChecked(null);
+			mapping.setIsChecked("false");
 			projectService.saveMapping(mapping);
 			logger.info("delete");
 		}
