@@ -64,7 +64,7 @@ public class UserQuery {
 		String query = "select user_role_mapping.ROLE_ID,case when PROJECT_ID = "+projectId+" and project_user_mapping.IS_CHECKED='true' then 'true' end as is_checked,user.* from user " 
 						+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
 						+"left join project_user_mapping on project_user_mapping.USER_ID = user.id and PROJECT_ID ="+projectId+" where ACTIVE != 'false'";
-		System.out.println("@@@@@@"+query);
+//		System.out.println("@@@@@@"+query);
 		List<UserWithRole> users = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserWithRole.class));
 		return users;
 	}
