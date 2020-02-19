@@ -1,5 +1,6 @@
 package com.timeSheet.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ import com.timeSheet.clib.model.SuccessIDResponse;
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
+import com.timeSheet.model.project.ActivityPaginationRequest;
+import com.timeSheet.model.project.ActivityPaginationResponse;
 import com.timeSheet.model.project.AddMembersRequest;
 import com.timeSheet.model.project.AddProjectRequest;
 import com.timeSheet.model.project.GetCountResponse;
@@ -27,6 +30,10 @@ import com.timeSheet.model.project.ProjectPaginationResponse;
 import com.timeSheet.model.project.ProjectPaginatoinRequest;
 import com.timeSheet.model.project.RemoveMemberRequest;
 import com.timeSheet.model.project.SearchProjectRequest;
+import com.timeSheet.model.timesheet.Activities;
+import com.timeSheet.model.timesheet.Project;
+import com.timeSheet.model.timesheet.ReportRequest;
+import com.timeSheet.model.timesheet.ReportResponse;
 import com.timeSheet.model.timesheet.TimeSheetRequest;
 import com.timeSheet.model.usermgmt.SearchUserDetailRequest;
 import com.timeSheet.model.usermgmt.UserDetail;
@@ -65,7 +72,9 @@ public class ProjectController {
 			project.setStartDate(request.getProject().getStartDate());
 			project.setEndDate(request.getProject().getEndDate());
 			project.setProjectType(request.getProject().getProjectType());
-			project.setDescription(request.getProject().getDescription());								
+			project.setDescription(request.getProject().getDescription());
+			project.setUpdationDate(new Date());
+			project.setOrgId(request.getProject().getOrgId());
 			projectService.addProject(project);
 			
 			for(int i=0; i < request.getId().length; i++){
@@ -73,7 +82,7 @@ public class ProjectController {
 						String value = request.getId()[i];
 						System.out.println("Request second kj"+value);
 						int id = Integer.parseInt(value);
-						projectUser = projectService.getByProjectAndUserId(project.getId(),id);
+						projectUser = projectService.getByProjectAndUserId(project.getId(),id,request.getProject().getOrgId());
 						if(projectUser == null) {
 					projectUser = new ProjectUserMapping();
 					projectUser.setProjectId(project.getId());
@@ -110,7 +119,7 @@ public class ProjectController {
 	public ProjectListResponse getProjectList(@RequestBody ProjectDetailRequest request){
 		ProjectListResponse response = new ProjectListResponse();
 		try{
-			List<ProjectDetail> projects = projectService.getProjectList(request.getUserId(),request.getRoleId());
+			List<ProjectDetail> projects = projectService.getProjectList(request.getOrgId());
 			response.setProjects(projects);
 			logger.info("project added");
 		}
@@ -134,13 +143,14 @@ public class ProjectController {
 				String value = request.getId()[i];
 				System.out.println("Request second kj"+value);
 				int id = Integer.parseInt(value);
-				projectUser = projectService.getByProjectAndUserId(request.getProjectId(),id);
+				projectUser = projectService.getByProjectAndUserId(request.getProjectId(),id,request.getOrgId());
 				if(projectUser == null) {
 				projectUser = new ProjectUserMapping();
 				}
 				projectUser.setProjectId(request.getProjectId());
 				projectUser.setUserId(id);
 				projectUser.setIsChecked("true");
+				projectUser.setOrgId(request.getOrgId());
 				projectService.saveMapping(projectUser);
 			}
 			logger.info("project mapping to user");
@@ -168,7 +178,7 @@ public class ProjectController {
 					to+=10;
 				}
 			}
-			List<Projects> projects = projectService.projectPagination(from, to,request.getName(),request.getType());
+			List<Projects> projects = projectService.projectPagination(from, to,request.getName(),request.getType(),request.getOrgId());
 			response.setProjects(projects);
 			logger.info("Project Pagination");
 		}
@@ -183,7 +193,7 @@ public class ProjectController {
 	public ProjectListResponse searchUserDetail(@RequestBody SearchProjectRequest request){
 		ProjectListResponse response = new ProjectListResponse();
 		try{
-			List<ProjectDetail> projectDetail = projectService.searchProjectDetail(request.getProjectDetail().getProjectName(),request.getProjectDetail().getProjectType());
+			List<ProjectDetail> projectDetail = projectService.searchProjectDetail(request.getProjectDetail().getProjectName(),request.getProjectDetail().getProjectType(),request.getOrgId());
 			response.setProjects(projectDetail);
 			logger.info("search project detail");
 		}
@@ -259,7 +269,7 @@ public class ProjectController {
 	public SuccessIDResponse removeMember(@RequestBody RemoveMemberRequest request){
 		SuccessIDResponse response = new SuccessIDResponse();
 		try{
-			ProjectUserMapping mapping = projectService.getByProjectAndUserId(request.getProjectId(), request.getUserId());
+			ProjectUserMapping mapping = projectService.getByProjectAndUserId(request.getProjectId(), request.getUserId(),request.getOrgId());
 			mapping.setIsChecked("false");
 			projectService.saveMapping(mapping);
 			logger.info("delete");
@@ -269,5 +279,106 @@ public class ProjectController {
 		}
 		return response;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/getUserProject")
+	public ProjectListResponse getUserByProject(@RequestBody RemoveMemberRequest request){
+		ProjectListResponse response = new ProjectListResponse();
+		try{
+			List<ProjectDetail> userProjects = projectService.getUserProject(request.getUserId(),request.getOrgId());
+			response.setProjects(userProjects);
+			logger.info("USer hour by id");
+		}
+		catch(Exception e){
+			logger.error("User hour falied",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	@RequestMapping(method = RequestMethod.POST, value = "/getActivityById")
+	public ReportResponse getActivityById(@RequestBody ReportRequest request){
+		ReportResponse response = new ReportResponse();
+		try{
+			Activities activities = projectService.getActivityById(request.getActivityId());
+			response.setActivities(activities);
+			logger.info("get activity");
+		}
+		catch(Exception e){
+			logger.error("get activityr falied",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/searchActivity")
+	public ActivityPaginationResponse searchActivity(@RequestBody ActivityPaginationRequest request){
+		ActivityPaginationResponse response = new ActivityPaginationResponse();
+		try{
+			List<Activities> activities = projectService.searchActivity(request.getActivityDetail().getActivity(),request.getOrgId());
+			response.setActivity(activities);
+			logger.info("search activities detail");
+		}
+		catch(Exception e){
+			logger.error("search activities failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/activityPagination")
+	public ActivityPaginationResponse activityPagination(@RequestBody ActivityPaginationRequest request){
+		ActivityPaginationResponse response = new ActivityPaginationResponse();
+		try{
+			int from=1;
+			int to=10;
+			for(int i=1;i<=request.getValue();i++){
+				if(i==1){
+					from=0;
+					to=10;
+				}
+				else{
+					from+=10;
+					to+=10;
+				}
+			}
+			List<Activities> activities = projectService.getActivityPagination(from, to,request.getActivity());
+			response.setActivity(activities);
+			logger.info("activity Pagination");
+		}
+		catch(Exception e){
+			logger.error("Pagination failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/addActivity")
+	public SuccessIDResponse addActivity(@RequestBody ReportRequest request){
+		SuccessIDResponse response = new SuccessIDResponse();
+		try{
+//			System.out.println("Request second"+JSONUtil.toJson(request));
+			Activities activities= new  Activities();
+			activities = projectService.getActivityById(request.getId());
+			
+			if(activities == null){
+				activities = new Activities();
+			}
+			activities.setActivity(request.getActivities().getActivity());
+			activities.setActivityDescription(request.getActivities().getActivityDescription());
+			activities.setCreationDate(new Date());
+			activities.setOrgId(request.getOrgId());
+			projectService.saveActivities(activities);
+			
+			logger.info("activity added");
+		}
+		catch(Exception e){
+			logger.error("activity failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
 }
 

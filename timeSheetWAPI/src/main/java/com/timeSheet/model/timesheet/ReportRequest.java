@@ -18,7 +18,9 @@ public class ReportRequest {
     int projectId;
 	int activityId;
 	ReportList reportList;
-
+    Activities activities;
+	int orgId;
+	
 	public Date getDate1() {
 		return date1;
 	}
@@ -90,6 +92,22 @@ public class ReportRequest {
 
 	public void setReportList(ReportList reportList) {
 		this.reportList = reportList;
+	}
+
+	public Activities getActivities() {
+		return activities;
+	}
+
+	public void setActivities(Activities activities) {
+		this.activities = activities;
+	}
+
+	public int getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
       
 	

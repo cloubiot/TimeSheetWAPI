@@ -11,6 +11,8 @@ public class UserSignupRequest {
 	String phoneNumber;
 	int role;
 	String active;
+	int orgId;
+	
 	public int getId() {
 		return id;
 	}
@@ -64,6 +66,12 @@ public class UserSignupRequest {
 	}
 	public void setActive(String active) {
 		this.active = active;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 }

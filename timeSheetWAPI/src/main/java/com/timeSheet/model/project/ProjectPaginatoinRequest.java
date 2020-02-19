@@ -7,7 +7,8 @@ public class ProjectPaginatoinRequest {
 	int roleId;
 	String name;
 	String type;
-
+    int orgId;
+    
 	public int getValue() {
 		return value;
 	}
@@ -46,6 +47,14 @@ public class ProjectPaginatoinRequest {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

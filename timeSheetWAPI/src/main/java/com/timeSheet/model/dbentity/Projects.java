@@ -19,6 +19,8 @@ public class Projects {
 	String endDate;
 	String description;
     String startDate;
+    int orgId;
+    Date updationDate;
 	
 	public int getId() {
 		return id;
@@ -56,6 +58,18 @@ public class Projects {
 	}
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
+	}
+	public Date getUpdationDate() {
+		return updationDate;
+	}
+	public void setUpdationDate(Date updationDate) {
+		this.updationDate = updationDate;
 	}
 	
 	

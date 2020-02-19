@@ -12,6 +12,8 @@ public class UserRoleMapping {
 	int id;
 	int userId;
 	int roleId;
+	int orgId;
+	
 	public int getId() {
 		return id;
 	}
@@ -29,6 +31,12 @@ public class UserRoleMapping {
 	}
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timeSheet.clib.util.JSONUtil;
-import com.timeSheet.model.timesheet.Activity;
+import com.timeSheet.model.timesheet.Activities;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -80,9 +80,9 @@ public class TimeSheetQuery {
 	
 	}
 	
-	public List<Activity> getActivity(){
+	public List<Activities> getActivity(){
 		String query = "SELECT * FROM activities";
-		List<Activity> getActivity = jdbcTemplate.query(query, new BeanPropertyRowMapper(Activity.class));
+		List<Activities> getActivity = jdbcTemplate.query(query, new BeanPropertyRowMapper(Activities.class));
 		return getActivity;
 	
 	}

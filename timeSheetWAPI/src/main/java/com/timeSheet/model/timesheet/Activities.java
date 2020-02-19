@@ -1,13 +1,14 @@
 package com.timeSheet.model.timesheet;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Activity {
+public class Activities {
  
 	
 	@Id
@@ -17,6 +18,7 @@ public class Activity {
 	String activityDescription;
 	Date creationDate;
 	Date updationDate;
+	int orgId;
 	
 	public int getId() {
 		return id;
@@ -48,6 +50,12 @@ public class Activity {
 	}
 	public void setUpdationDate(Date updationDate) {
 		this.updationDate = updationDate;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

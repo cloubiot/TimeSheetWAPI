@@ -6,6 +6,6 @@ import com.timeSheet.model.dbentity.ProjectUserMapping;
 
 public interface ProejctUserMappingRepository extends CrudRepository<ProjectUserMapping, Long>{
 
-	ProjectUserMapping findByProjectIdAndUserId(int projectId,int userId);
+	ProjectUserMapping findByProjectIdAndUserIdAndOrgId(int projectId,int userId,int orgId);
 	ProjectUserMapping deleteByProjectIdAndUserId(int projectId, int userId);
 }

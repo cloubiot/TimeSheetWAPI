@@ -5,20 +5,16 @@
 
 <div class="container">
 <h1 style="margin-top:5px; margin-bottom:5px">
-Timesheet Credential</h1>
+Timesheet Organization</h1>
 </div>
 </header>
 <hr>
 
 <div class="container" style="padding:10px;">
-<b>Welcome $firstName</b>
-<p style="line-height:2">We have created account on <b>$orgName</b> Timesheet.<br>
-Your Username:<b> $userName</b><br>
-Password:<b> $password</b><br>
-
-
-
-See you soon on Timesheet</p><br>
+<b>Welcome $userName</b>
+<p style="line-height:2">You have successfully created <b>$orgName</b> organization on Timesheet.<br>
+now you can put your valuable report.
+</p><br>
 
 <b>Regards,</b><br>
 <b>Timesheet Team</b>

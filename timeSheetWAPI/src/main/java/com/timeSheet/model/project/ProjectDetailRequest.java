@@ -5,6 +5,7 @@ public class ProjectDetailRequest {
 	int projectId;
 	int userId;
 	int roleId;
+	int orgId;
 	
 	public int getProjectId() {
 		return projectId;
@@ -23,6 +24,12 @@ public class ProjectDetailRequest {
 	}
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

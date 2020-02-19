@@ -14,6 +14,7 @@ public class ProjectUserMapping {
 	int userId;
 	String hoursPerProject;
 	String isChecked;
+	int orgId;
 	
 	
 	public int getId() {
@@ -45,6 +46,12 @@ public class ProjectUserMapping {
 	}
 	public void setIsChecked(String isChecked) {
 		this.isChecked = isChecked;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

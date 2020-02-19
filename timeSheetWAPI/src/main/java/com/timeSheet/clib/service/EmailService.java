@@ -71,7 +71,7 @@ public class EmailService {
 		MimeMessage msg = new MimeMessage(session);
 		msg.setText(emailBodyMessage);
 		msg.setSubject(emailSubject);
-		msg.setFrom(new InternetAddress(SENDER_EMAIL));
+		msg.setFrom(new InternetAddress(SENDER_EMAIL,"noreply@timesheet.com"));
 		msg.setContent(emailBodyMessage,"text/html");
 		msg.addRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
 		

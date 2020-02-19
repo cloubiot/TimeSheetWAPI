@@ -12,10 +12,12 @@ public class ReportResponse extends BaseResponse{
 	
 	List<ReportList> reportlist;
 	
-	List<Activity>  activity;
+	List<Activities>  activity;
 	
 	List<Reportview> reportview;
 
+	Activities activities;
+	
 	public List<Report> getReport() {
 		return report;
 	}
@@ -40,11 +42,11 @@ public class ReportResponse extends BaseResponse{
 		this.reportlist = reportlist;
 	}
 
-	public List<Activity> getActivity() {
+	public List<Activities> getActivity() {
 		return activity;
 	}
 
-	public void setActivity(List<Activity> activity) {
+	public void setActivity(List<Activities> activity) {
 		this.activity = activity;
 	}
 
@@ -54,6 +56,14 @@ public class ReportResponse extends BaseResponse{
 
 	public void setReportview(List<Reportview> reportview) {
 		this.reportview = reportview;
+	}
+
+	public Activities getActivities() {
+		return activities;
+	}
+
+	public void setActivities(Activities activities) {
+		this.activities = activities;
 	}
 
 	

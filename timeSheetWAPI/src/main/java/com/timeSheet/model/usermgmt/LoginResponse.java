@@ -10,6 +10,7 @@ public class LoginResponse extends BaseResponse{
 //	User user;
 	List<User> user;
 	long roleId;
+	long orgId;
 
 //	public User getUser() {
 //		return user;
@@ -33,6 +34,14 @@ public class LoginResponse extends BaseResponse{
 
 	public void setRoleId(long roleId) {
 		this.roleId = roleId;
+	}
+
+	public long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(long orgId) {
+		this.orgId = orgId;
 	}
 	
 	

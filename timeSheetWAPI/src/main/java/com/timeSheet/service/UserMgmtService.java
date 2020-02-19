@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timeSheet.clib.util.JSONUtil;
+import com.timeSheet.dao.OrganizationRepository;
 import com.timeSheet.dao.UserMgmtRepository;
 import com.timeSheet.dao.UserQuery;
 import com.timeSheet.dao.UserRoleMappingRepository;
 import com.timeSheet.dao.UserRoleRepository;
+import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRole;
 import com.timeSheet.model.dbentity.UserRoleMapping;
@@ -28,8 +30,12 @@ public class UserMgmtService {
 	
 	@Autowired
 	UserQuery userQuery;
+	
 	@Autowired
 	UserRoleRepository userRoleRepository;
+	
+	@Autowired
+	OrganizationRepository organizationRepository;
 	
 	
 	
@@ -48,6 +54,12 @@ public class UserMgmtService {
 	public User getByEmail(String email){
 		return this.userMgmtRepository.findByEmail(email);
 	}
+	public Organization getByName(String name){
+		return this.organizationRepository.findByName(name);
+	}
+	public Organization getBySite(String site){
+		return this.organizationRepository.findBySite(site);
+	}
 	public User emailIdExists(String email,int userId){
 		return this.userQuery.emailIdExists(email, userId);
 	}
@@ -63,8 +75,8 @@ public class UserMgmtService {
 		return this.userMgmtRepository.findById(id);
 	}
 	
-	public List<UserWithRole> getUserList(int projectId){
-		return this.userQuery.getUserList(projectId);
+	public List<UserWithRole> getUserList(int projectId,int orgId){
+		return this.userQuery.getUserList(projectId,orgId);
 	}
 	
 	public List<UserWithRole> searchUser(String name,int roleId){
@@ -80,11 +92,11 @@ public class UserMgmtService {
 	public UserRoleMapping getRoleByUserId(int id){
 		return this.userRoleMappingRepository.findByUserId(id);
 	}
-	public List<UserDetail> getUserByPagination(int from,int to,String email,String name){
-		return this.userQuery.getPaginationForUser(from, to,email,name);
+	public List<UserDetail> getUserByPagination(int from,int to,String email,String name,int orgId){
+		return this.userQuery.getPaginationForUser(from, to,email,name,orgId);
 	}
-	public List<UserDetail> searchUserDetail(String name,String mailId,String phoneNumber,String role,String active){
-		return this.userQuery.searchUserDetail(name, mailId, phoneNumber, role,active);
+	public List<UserDetail> searchUserDetail(String name,String mailId,String phoneNumber,String role,String active,int orgId){
+		return this.userQuery.searchUserDetail(name, mailId, phoneNumber, role,active,orgId);
 	}
 	public List<UserDetail> getActiveUser(String value){
 		return this.userQuery.getActiveUser(value);
@@ -98,5 +110,8 @@ public class UserMgmtService {
 	
 	public List<UserRole> getRoles(){
 		return this.userRoleRepository.findAll();
+	}
+	public Organization getOrgName(int orgId){
+		return this.organizationRepository.findById(orgId);
 	}
 }

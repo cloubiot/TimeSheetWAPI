@@ -25,6 +25,7 @@ import com.timeSheet.clib.service.EmailTemplateService;
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.clib.util.RandomPassword;
 import com.timeSheet.clib.util.SecureData;
+import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRole;
 import com.timeSheet.model.dbentity.UserRoleMapping;
@@ -53,6 +54,7 @@ import com.timeSheet.model.usermgmt.UserNameExistsRequest;
 import com.timeSheet.model.usermgmt.UserNameExistsResponse;
 import com.timeSheet.model.usermgmt.UserPaginationRequest;
 import com.timeSheet.model.usermgmt.UserProfile;
+import com.timeSheet.model.usermgmt.UserProjectRequest;
 import com.timeSheet.model.usermgmt.UserSignupRequest;
 import com.timeSheet.model.usermgmt.UserWithRole;
 import com.timeSheet.service.UserMgmtService;
@@ -81,6 +83,7 @@ public class UserMgmtController {
 			UserRoleMapping roleMapping = new UserRoleMapping();
 			SecureData sd = new SecureData();
 			RandomPassword newPassword = new RandomPassword();
+			Organization org = userMgmtService.getOrgName(request.getOrgId());
 			user = userMgmtService.getUserById(request.getId());
 			if(user == null ){
 				user = new User();
@@ -88,6 +91,14 @@ public class UserMgmtController {
 				String password = sd.decrypt(user.getPassword());
 				response.setPassword(password);
 				user.setActive("true");
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("firstName", request.getFirstName());
+				map.put("userName", request.getUserName());
+				map.put("orgName", org.getName());
+				map.put("password", password );
+				String subject = "Timesheet Account";
+				String emailBody = emailTemplateService.getEmailTemplate("register.vm",map);
+				sendEmail(request.getEmail(),subject,emailBody);
 			}
 			user.setUserName(request.getUserName());
 			user.setFirstName(request.getFirstName());
@@ -96,6 +107,7 @@ public class UserMgmtController {
 			user.setPhoneNumber(request.getPhoneNumber());
 			user.setActive(request.getActive());
 			user.setId(request.getId());
+			user.setOrgId(request.getOrgId());
 			userMgmtService.saveUser(user);
 			roleMapping = userMgmtService.getRoleByUserId(user.getId());
 			if(roleMapping == null){
@@ -133,6 +145,7 @@ public class UserMgmtController {
 			try{
 				for(User retUser: user) {
 				long roleId = userMgmtService.getUserRoleId(retUser.getId());
+				response.setOrgId(retUser.getOrgId());
 				response.setRoleId(roleId);
 				}
 			}catch(Exception e){
@@ -224,6 +237,46 @@ public class UserMgmtController {
 		
 		return response;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/orgExist")
+	public EmailIdExistResponse organizationExist(@RequestBody EmailIdExistRequest request){
+		EmailIdExistResponse response = new EmailIdExistResponse();
+		try{
+			
+			Organization orgExist = userMgmtService.getByName(request.getName());
+				if(orgExist != null)
+					response.setOrgExist(true);
+				else
+					response.setOrgExist(false);
+		}
+		catch(Exception e){
+			logger.error("invalid organization", e);
+			response.setSuccess(false);
+		}
+		
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/siteExist")
+	public EmailIdExistResponse websiteExist(@RequestBody EmailIdExistRequest request){
+		EmailIdExistResponse response = new EmailIdExistResponse();
+		try{
+			
+			Organization siteExist = userMgmtService.getBySite(request.getWebsite());
+				if(siteExist != null)
+					response.setWebsiteExist(true);
+				else
+					response.setWebsiteExist(false);
+		}
+		catch(Exception e){
+			logger.error("invalid website", e);
+			response.setSuccess(false);
+		}
+		
+		return response;
+	}
+	
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/forgotPassword")
 	public ForgotPasswordResponse forgotPassword(@RequestBody ForgotPasswordRequest request){
 		ForgotPasswordResponse response = new ForgotPasswordResponse();
@@ -237,7 +290,7 @@ public class UserMgmtController {
 			map.put("lastName", user.getLastName());
 			map.put("userName", user.getUserName());
 			map.put("password", password );
-			String subject = "Your password for DCSolar ";
+			String subject = "Your password for Timesheet ";
 			String emailBody = emailTemplateService.getEmailTemplate("recoveryPassword.vm",map);
 			EmailMessage emailMessage = new EmailMessage();
 			emailMessage.setToEmail(user.getEmail());
@@ -346,11 +399,11 @@ public class UserMgmtController {
 		}
 		return response;
 }
-	@RequestMapping(method = RequestMethod.GET, value = "/getUserList/{projectId}")
-	public UserListResponse getUserList(@PathVariable int projectId){
+	@RequestMapping(method = RequestMethod.POST, value = "/getUserList")
+	public UserListResponse getUserList(@RequestBody UserProjectRequest request){
 		UserListResponse response = new UserListResponse();
 		try{
-			List<UserWithRole> user = userMgmtService.getUserList(projectId);
+			List<UserWithRole> user = userMgmtService.getUserList(request.getProjectId(),request.getOrgId());
 			response.setUser(user);
 			logger.info("user List");
 		}
@@ -445,7 +498,7 @@ public class UserMgmtController {
 					to+=10;
 				}
 			}
-			List<UserDetail> userDetail = userMgmtService.getUserByPagination(from, to,request.getEmail(),request.getName());
+			List<UserDetail> userDetail = userMgmtService.getUserByPagination(from, to,request.getEmail(),request.getName(),request.getOrgId());
 //			System.out.println(JSONUtil.toJson(userDetail));
 			response.setUserDetail(userDetail);
 			logger.info("user Details");
@@ -462,7 +515,7 @@ public class UserMgmtController {
 		UserDetailResponse response = new UserDetailResponse();
 		try{
 			List<UserDetail> userDetail = userMgmtService.searchUserDetail(request.getUserDetail().getFirstName(),request.getUserDetail().getEmail(), 
-											request.getUserDetail().getPhoneNumber(),request.getUserDetail().getDesc(),request.getUserDetail().getActive());
+											request.getUserDetail().getPhoneNumber(),request.getUserDetail().getDesc(),request.getUserDetail().getActive(),request.getOrgId());
 			response.setUserDetail(userDetail);
 			logger.info("search user detail");
 		}
@@ -548,5 +601,13 @@ public class UserMgmtController {
 			logger.error("user role failed",e);
 		}
 		return response;
+	}
+	
+	public void sendEmail(String mail,String subject,String emailBody) {
+		EmailMessage emailMessage = new EmailMessage();
+		emailMessage.setToEmail(mail);
+		emailMessage.setSubject(subject);
+		emailMessage.setEmailBody(emailBody);
+		emailService.sendEmail(mail, subject, emailBody);
 	}
 }

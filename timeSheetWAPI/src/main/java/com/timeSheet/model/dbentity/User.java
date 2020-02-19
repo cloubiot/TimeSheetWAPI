@@ -1,5 +1,7 @@
 package com.timeSheet.model.dbentity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,6 +21,9 @@ public class User {
 	String taxRate;
 	String profileImageUrl;
 	String active;
+	Date creationDate;
+	Date updationDate;
+	int orgId;
 	
 	public int getId() {
 		return id;
@@ -81,7 +86,24 @@ public class User {
 	public void setActive(String active) {
 		this.active = active;
 	}
-	
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	public Date getUpdationDate() {
+		return updationDate;
+	}
+	public void setUpdationDate(Date updationDate) {
+		this.updationDate = updationDate;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
+	}
 	
 	
 }

@@ -11,7 +11,7 @@ import com.timeSheet.dao.ReportRepository;
 import com.timeSheet.dao.TimeSheetQuery;
 import com.timeSheet.dao.TimeSheetRepository;
 import com.timeSheet.dao.UserQuery;
-import com.timeSheet.model.timesheet.Activity;
+import com.timeSheet.model.timesheet.Activities;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -82,7 +82,7 @@ public class TimeSheetServcie {
 		return this.timeSheetQuery.getReportlist(id,date1,date2,projectId,activityId);
 	}
 	
-	public List<Activity> getActivity() {
+	public List<Activities> getActivity() {
 		return this.timeSheetQuery.getActivity();
 		
 	}

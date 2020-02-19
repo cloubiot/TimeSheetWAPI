@@ -23,7 +23,7 @@ import com.timeSheet.clib.util.DateTimeUtil;
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
-import com.timeSheet.model.timesheet.Activity;
+import com.timeSheet.model.timesheet.Activities;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -207,7 +207,7 @@ public class TimeSheetController {
 	public ReportResponse getActivity() {
 		ReportResponse response = new ReportResponse();
 		try {
-			List<Activity> activity = timeSheetService.getActivity();
+			List<Activities> activity = timeSheetService.getActivity();
 			response.setActivity(activity);
 			logger.info("project list");
 	}

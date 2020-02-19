@@ -4,6 +4,7 @@ public class RemoveMemberRequest {
 
 	int userId;
 	int projectId;
+	int orgId;
 	
 	public int getUserId() {
 		return userId;
@@ -16,6 +17,12 @@ public class RemoveMemberRequest {
 	}
 	public void setProjectId(int projectId) {
 		this.projectId = projectId;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	
