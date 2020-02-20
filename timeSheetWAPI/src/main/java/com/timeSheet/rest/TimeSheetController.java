@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -158,11 +159,11 @@ public class TimeSheetController {
 		}
 		return response;
 	}
-	@RequestMapping(method = RequestMethod.GET, value = "/getProject")
-	public ReportResponse getProject() {
+	@RequestMapping(method = RequestMethod.GET, value = "/getProject/{orgId}")
+	public ReportResponse getProject(@PathVariable int orgId) {
 		ReportResponse response = new ReportResponse();
 		try {
-			List<Project> project = timeSheetService.getProject();
+			List<Project> project = timeSheetService.getProject(orgId);
 			response.setProject(project);
 			logger.info("project list");
 	}
@@ -192,7 +193,7 @@ public class TimeSheetController {
 		ReportResponse response = new ReportResponse();
 //		System.out.println(" @@@@@@ "+JSONUtil.toJson(request));
 		try {
-			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getId(),request.getDate1(),request.getDate2(),request.getProjectId(),request.getActivityId());
+			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getUserName(),request.getDate1(),request.getDate2(),request.getProjectName(),request.getActivityName(),request.getOrgId());
 			response.setReportlist(reportlist);
 //			System.out.println(" @@@@@@ "+JSONUtil.toJson(reportlist));
 			logger.info("project list");
@@ -203,11 +204,11 @@ public class TimeSheetController {
 		}
 	return response;
 	}
-	@RequestMapping(method = RequestMethod.GET, value = "/getActivity")
-	public ReportResponse getActivity() {
+	@RequestMapping(method = RequestMethod.GET, value = "/getActivity/{orgId}")
+	public ReportResponse getActivity(@PathVariable int orgId) {
 		ReportResponse response = new ReportResponse();
 		try {
-			List<Activities> activity = timeSheetService.getActivity();
+			List<Activities> activity = timeSheetService.getActivity(orgId);
 			response.setActivity(activity);
 			logger.info("project list");
 	}

@@ -74,16 +74,16 @@ public class TimeSheetServcie {
 		return this.timeSheetQuery.findActivity(project,activity,date,userId);
 	}
 
-	public List<Project> getProject() {
-		return this.timeSheetQuery.getProject();
+	public List<Project> getProject(int orgId) {
+		return this.timeSheetQuery.getProject(orgId);
 		
 	}
-	public List<ReportList> getReportlist(int id,Date date1,Date date2,int projectId,int activityId ){
-		return this.timeSheetQuery.getReportlist(id,date1,date2,projectId,activityId);
+	public List<ReportList> getReportlist(String user,Date date1,Date date2,String project,String activity,int orgId){
+		return this.timeSheetQuery.getReportlist(user,date1,date2,project,activity,orgId);
 	}
 	
-	public List<Activities> getActivity() {
-		return this.timeSheetQuery.getActivity();
+	public List<Activities> getActivity(int orgId) {
+		return this.timeSheetQuery.getActivity(orgId);
 		
 	}
 }

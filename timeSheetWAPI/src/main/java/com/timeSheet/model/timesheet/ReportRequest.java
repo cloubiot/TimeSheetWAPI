@@ -17,9 +17,13 @@ public class ReportRequest {
     String task;
     int projectId;
 	int activityId;
+	String uId;
 	ReportList reportList;
     Activities activities;
 	int orgId;
+	String projectName;
+	String activityName;
+	String userName;
 	
 	public Date getDate1() {
 		return date1;
@@ -108,6 +112,38 @@ public class ReportRequest {
 
 	public void setOrgId(int orgId) {
 		this.orgId = orgId;
+	}
+
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
       
 	

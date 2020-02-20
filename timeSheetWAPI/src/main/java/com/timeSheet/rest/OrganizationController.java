@@ -25,6 +25,8 @@ import com.timeSheet.model.email.EmailMessage;
 import com.timeSheet.model.organization.OrganizationDetails;
 import com.timeSheet.model.organization.OrganizationRequest;
 import com.timeSheet.model.organization.OrganizationResponse;
+import com.timeSheet.model.organization.SearchOrgRequest;
+import com.timeSheet.model.organization.SearchOrgResponse;
 import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserDetailResponse;
 import com.timeSheet.service.OrganizationService;
@@ -83,6 +85,50 @@ public class OrganizationController {
 		}
 		catch(Exception e){
 			logger.error("userdetail failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/searchOrg")
+	public SearchOrgResponse searchOrganization(@RequestBody SearchOrgRequest request) {
+		SearchOrgResponse response = new SearchOrgResponse();
+		
+		try{
+			List<OrganizationDetails> orgDetails = organizationService.searchOrg(request.getOrgDetail().getName());
+			response.setOrganizationDetails(orgDetails);
+			logger.info("search organization list");
+		}
+		catch(Exception e){
+			logger.error("search organization failied",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/orgPagination")
+	public SearchOrgResponse orgPagination(@RequestBody SearchOrgRequest request) {
+		SearchOrgResponse response = new SearchOrgResponse();
+		
+		try{
+			int from=1;
+			int to=10;
+			for(int i=1;i<=request.getValue();i++){
+				if(i==1){
+					from=0;
+					to=10;
+				}
+				else{
+					from+=10;
+					to+=10;
+				}
+			}
+			List<OrganizationDetails> orgDetails = organizationService.orgPagination(from,to,request.getName());
+			response.setOrganizationDetails(orgDetails);
+			logger.info("search organization list");
+		}
+		catch(Exception e){
+			logger.error("search organization failied",e);
 			response.setSuccess(false);
 		}
 		return response;

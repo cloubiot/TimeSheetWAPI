@@ -25,7 +25,7 @@ public class UserQuery {
 	public List<User> login(String email,String password){
 		String query = "select user.id,user_name,first_name,last_name,email,phone_number,profile_image_url,active,creation_date,updation_date,org_id,org.name as taxRate from user "
 				        +"left join organization as org on org.id = user.org_id "
-						+"where (email='"+email+"' or USER_NAME='"+email+"') and password='"+password+"'";
+						+"where email='"+email+"' and password='"+password+"'";
 		List<User> user = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
 		return user;
 	}

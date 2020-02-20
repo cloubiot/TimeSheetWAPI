@@ -93,7 +93,7 @@ public class UserMgmtController {
 				user.setActive("true");
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("firstName", request.getFirstName());
-				map.put("userName", request.getUserName());
+				map.put("userName", request.getEmail());
 				map.put("orgName", org.getName());
 				map.put("password", password );
 				String subject = "Timesheet Account";

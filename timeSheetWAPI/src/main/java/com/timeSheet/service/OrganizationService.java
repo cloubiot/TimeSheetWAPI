@@ -27,5 +27,11 @@ public class OrganizationService {
 	public List<OrganizationDetails> getOrganization(){
 		return this.organizationQuery.getOrganization();
 	}
+	public List<OrganizationDetails> searchOrg(String name){
+		return this.organizationQuery.searchOrg(name);
+	}
+	public List<OrganizationDetails> orgPagination(int from,int to,String name){
+		return this.organizationQuery.orgPagination(from,to,name);
+	}
 	
 }
