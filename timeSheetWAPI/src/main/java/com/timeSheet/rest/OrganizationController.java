@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,6 +137,7 @@ public class OrganizationController {
 	
 	public void addOrgUser(OrganizationRequest request,Organization org) throws Exception {
 		SecureData sd = new SecureData();
+		String secureToken = UUID.randomUUID().toString().replace("-", "");
 		User user = new User();
 		user.setUserName(request.getUser().getUserName());
 		user.setFirstName(request.getUser().getFirstName());
@@ -147,6 +149,7 @@ public class OrganizationController {
 		user.setCreationDate(new Date());
 		user.setUpdationDate(new Date());
 		user.setOrgId(org.getId());
+		user.setSecureToken(secureToken);
 		userMgmtService.saveUser(user);
 		UserRoleMapping roleMapping = new UserRoleMapping();
 		if(org.getSite().equalsIgnoreCase("https://www.cloubiot.com")) {

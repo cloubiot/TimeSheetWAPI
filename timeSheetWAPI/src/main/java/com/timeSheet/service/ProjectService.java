@@ -78,8 +78,8 @@ public class ProjectService {
 		return this.activityRepository.findById(activityId);
 	}
 	
-	public List<Activities> getActivityPagination(int  from,int to,String activity){
-		return this.projectQuery.getActivityPagination(from,to,activity);
+	public List<Activities> getActivityPagination(int  from,int to,String activity,int orgId){
+		return this.projectQuery.getActivityPagination(from,to,activity,orgId);
 	}
 	
 	public Activities saveActivities(Activities activities) {

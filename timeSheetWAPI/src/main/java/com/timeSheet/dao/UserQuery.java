@@ -23,7 +23,7 @@ public class UserQuery {
     JdbcTemplate jdbcTemplate;
 	
 	public List<User> login(String email,String password){
-		String query = "select user.id,user_name,first_name,last_name,email,phone_number,profile_image_url,active,creation_date,updation_date,org_id,org.name as taxRate from user "
+		String query = "select user.id,user_name,first_name,last_name,email,phone_number,profile_image_url,active,creation_date,updation_date,org_id,org.name as taxRate,secure_token from user "
 				        +"left join organization as org on org.id = user.org_id "
 						+"where email='"+email+"' and password='"+password+"'";
 		List<User> user = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));

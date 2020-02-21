@@ -10,7 +10,7 @@ public class Reportview {
 	@GeneratedValue
 	int id;
 	int userId;
-	Date date;
+	String date;
 	String projectId;
 	String activityId;
 	String projectName;
@@ -29,10 +29,10 @@ public class Reportview {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getProjectId() {

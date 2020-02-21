@@ -3,8 +3,11 @@ package com.timeSheet.rest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -19,12 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.timeSheet.clib.cache.CacheService;
+import com.timeSheet.clib.cache.EhCacheServiceImpl;
 import com.timeSheet.clib.model.SuccessIDResponse;
 import com.timeSheet.clib.service.EmailService;
 import com.timeSheet.clib.service.EmailTemplateService;
+import com.timeSheet.clib.util.AuthUtil;
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.clib.util.RandomPassword;
 import com.timeSheet.clib.util.SecureData;
+import com.timeSheet.clib.util.UuidProfile;
 import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRole;
@@ -55,6 +62,7 @@ import com.timeSheet.model.usermgmt.UserNameExistsResponse;
 import com.timeSheet.model.usermgmt.UserPaginationRequest;
 import com.timeSheet.model.usermgmt.UserProfile;
 import com.timeSheet.model.usermgmt.UserProjectRequest;
+import com.timeSheet.model.usermgmt.UserSessionProfile;
 import com.timeSheet.model.usermgmt.UserSignupRequest;
 import com.timeSheet.model.usermgmt.UserWithRole;
 import com.timeSheet.service.UserMgmtService;
@@ -82,6 +90,7 @@ public class UserMgmtController {
 			User user = new User();
 			UserRoleMapping roleMapping = new UserRoleMapping();
 			SecureData sd = new SecureData();
+			String secureToken = UUID.randomUUID().toString().replace("-", "");
 			RandomPassword newPassword = new RandomPassword();
 			Organization org = userMgmtService.getOrgName(request.getOrgId());
 			user = userMgmtService.getUserById(request.getId());
@@ -89,8 +98,8 @@ public class UserMgmtController {
 				user = new User();
 				user.setPassword(sd.encrypt(newPassword.generateRandomString()));
 				String password = sd.decrypt(user.getPassword());
-				response.setPassword(password);
 				user.setActive("true");
+				user.setSecureToken(secureToken);
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("firstName", request.getFirstName());
 				map.put("userName", request.getEmail());
@@ -126,7 +135,8 @@ public class UserMgmtController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request,HttpServletRequest servletRequest,
+			HttpServletResponse res){
 		LoginResponse response = new LoginResponse();
 		try{
 //			System.out.println("login " +request.getUserName()+" pass "+request.getPassword());
@@ -144,14 +154,20 @@ public class UserMgmtController {
 			}
 			try{
 				for(User retUser: user) {
+					System.out.println("&&&&&"+JSONUtil.toJson(retUser));
 				long roleId = userMgmtService.getUserRoleId(retUser.getId());
 				response.setOrgId(retUser.getOrgId());
 				response.setRoleId(roleId);
+				UserSessionProfile userSessionProfile = new UserSessionProfile();
+				userSessionProfile.setAdminId(roleId);
+				userSessionProfile.setId(retUser.getId());
+				userSessionProfile.setSecureToken(retUser.getSecureToken());
+				UuidProfile.putSessionProfile(retUser.getSecureToken(),res,userSessionProfile);
 				}
 			}catch(Exception e){
 				logger.error("roleId not available", e);
 			}
-			
+	
 		}
 		catch(Exception e){
 			logger.error("login Failed",e);
@@ -431,8 +447,15 @@ public class UserMgmtController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/getUserDetails/{id}")
-	public UserDetailResponse getUserDetail(@PathVariable int id){
+	public UserDetailResponse getUserDetail(@PathVariable int id,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
+//		getActivity(servletRequest);
+//		if(!AuthUtil.isAdminAuthorized(response,1,servletRequest)) {
+//			if(!AuthUtil.isAuthorized(response,1,servletRequest)) {
+//				return response;
+//			}
+//			return response;
+//		}
 		try{
 			List<UserDetail> userDetail = userMgmtService.getUserDetail(id);
 //			System.out.println(JSONUtil.toJson(userDetail));
@@ -609,5 +632,21 @@ public class UserMgmtController {
 		emailMessage.setSubject(subject);
 		emailMessage.setEmailBody(emailBody);
 		emailService.sendEmail(mail, subject, emailBody);
+	}
+	
+	private void getActivity(HttpServletRequest request) {
+		Cookie cookie = UuidProfile.getCookie(request, "userState");
+		if(cookie != null) {
+			User userToken  =  userMgmtService.getUserProfileToken(cookie.getValue());
+			if(userToken != null){
+				long roleId = userMgmtService.getUserRoleId(userToken.getId());
+				UserSessionProfile userSessionProfile = new UserSessionProfile();
+				userSessionProfile.setAdminId(roleId);
+				userSessionProfile.setId(userToken.getId());
+				userSessionProfile.setSecureToken(cookie.getValue());
+				CacheService ehcs = new EhCacheServiceImpl();
+				ehcs.putCache(cookie.getValue(), userSessionProfile);
+			}
+		}
 	}
 }

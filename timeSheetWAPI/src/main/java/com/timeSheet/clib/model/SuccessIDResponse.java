@@ -8,7 +8,6 @@ public class SuccessIDResponse extends BaseResponse{
 	long id;
 	
 	List<Report> report;
-	String password;
 	
 	public SuccessIDResponse(){
 		
@@ -30,18 +29,5 @@ public class SuccessIDResponse extends BaseResponse{
 		this.report = report;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	
-
-
-
-	
 
 }

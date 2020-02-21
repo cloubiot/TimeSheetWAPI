@@ -114,4 +114,8 @@ public class UserMgmtService {
 	public Organization getOrgName(int orgId){
 		return this.organizationRepository.findById(orgId);
 	}
+	
+	public User getUserProfileToken(String token) {
+		return this.userMgmtRepository.findBySecureToken(token);
+	}
 }

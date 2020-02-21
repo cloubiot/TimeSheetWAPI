@@ -343,7 +343,7 @@ public class ProjectController {
 					to+=10;
 				}
 			}
-			List<Activities> activities = projectService.getActivityPagination(from, to,request.getActivity());
+			List<Activities> activities = projectService.getActivityPagination(from, to,request.getActivity(),request.getOrgId());
 			response.setActivity(activities);
 			logger.info("activity Pagination");
 		}

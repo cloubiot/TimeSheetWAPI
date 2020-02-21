@@ -54,7 +54,7 @@ public class TimeSheetQuery {
 		return getReport;
 	}
 	
-	public List<Reportview> getReportview(int userId,Date date){
+	public List<Reportview> getReportview(int userId,String date){
 		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+userId+" and date  <= '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-7 DAY and date > '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-0 DAY order by date";
 //		System.out.println("&&&&&"+query);	
 		List<Reportview> getReportview = jdbcTemplate.query(query, new BeanPropertyRowMapper(Reportview.class));

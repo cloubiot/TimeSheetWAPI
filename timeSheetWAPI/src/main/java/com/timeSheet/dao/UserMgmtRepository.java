@@ -11,6 +11,6 @@ public interface UserMgmtRepository extends CrudRepository<User,Long> {
 	User findByEmail(String email);
 	User findByIdAndPassword(int id,String password);
 	User findById(int id);
-
+    User findBySecureToken(String secureToken);
 	
 }

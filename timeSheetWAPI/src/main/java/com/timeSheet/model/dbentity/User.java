@@ -24,6 +24,7 @@ public class User {
 	Date creationDate;
 	Date updationDate;
 	int orgId;
+	String secureToken;
 	
 	public int getId() {
 		return id;
@@ -103,6 +104,12 @@ public class User {
 	}
 	public void setOrgId(int orgId) {
 		this.orgId = orgId;
+	}
+	public String getSecureToken() {
+		return secureToken;
+	}
+	public void setSecureToken(String secureToken) {
+		this.secureToken = secureToken;
 	}
 	
 	

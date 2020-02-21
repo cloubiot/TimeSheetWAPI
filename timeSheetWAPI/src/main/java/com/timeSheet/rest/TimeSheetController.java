@@ -95,7 +95,7 @@ public class TimeSheetController {
 //		return response;
 //	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="timesheetReport")
+	@RequestMapping(method = RequestMethod.POST, value="/addNewRecord")
 	public SuccessIDResponse timesheetReport(@RequestBody TimeSheetRequest request){
 	SuccessIDResponse response = new SuccessIDResponse();
 	System.out.println("++++"+JSONUtil.toJson(request));
@@ -173,7 +173,7 @@ public class TimeSheetController {
 		}
 	return response;
 	}
-	@RequestMapping(method = RequestMethod.POST, value = "/getReportview")
+	@RequestMapping(method = RequestMethod.POST, value = "/getTimeSheet")
 	public ReportResponse getReportview(@RequestBody ReportRequest request){
 		ReportResponse response = new ReportResponse();
 		try{

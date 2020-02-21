@@ -99,12 +99,12 @@ public class ProjectQuery {
 		return userProjects;
 	}
 	
-	public List<Activities> getActivityPagination(int from,int to,String activity){
+	public List<Activities> getActivityPagination(int from,int to,String activity,int orgId){
 		
 		if(activity == null) {
 			activity = "";
 		}
-		String query = "select * from activities where activity like '%"+activity+"%' limit "+from+","+to;
+		String query = "select * from activities where activity like '%"+activity+"%' and org_id="+orgId+" limit "+from+","+to;
 		System.out.println("@@@@"+query);
 		List<Activities> activities = jdbcTemplate.query(query, new BeanPropertyRowMapper(Activities.class));
 		return activities;

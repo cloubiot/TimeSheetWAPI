@@ -11,7 +11,7 @@ public class ReportRequest {
 	@GeneratedValue
 	Date date1;
 	Date date2;
-	Date date;
+	String date;
     int userId;
     int id;
     String task;
@@ -42,11 +42,11 @@ public class ReportRequest {
 	}
 
 	
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

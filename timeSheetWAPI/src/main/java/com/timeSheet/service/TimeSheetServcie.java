@@ -62,7 +62,7 @@ public class TimeSheetServcie {
 	public List<Report> getReport(int  userId){
 		return this.timeSheetQuery.getReport(userId);
 	}
-	public List<Reportview> getReportview(int userId,Date date){
+	public List<Reportview> getReportview(int userId,String date){
 		return this.timeSheetQuery.getReportview(userId,date);
 	}
 	
