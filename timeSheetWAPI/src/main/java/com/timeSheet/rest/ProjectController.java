@@ -3,6 +3,9 @@ package com.timeSheet.rest;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.timeSheet.clib.cache.CacheService;
+import com.timeSheet.clib.cache.EhCacheServiceImpl;
 import com.timeSheet.clib.model.SuccessIDResponse;
+import com.timeSheet.clib.util.AuthUtil;
 import com.timeSheet.clib.util.JSONUtil;
+import com.timeSheet.clib.util.UuidProfile;
 import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
+import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.project.ActivityPaginationRequest;
 import com.timeSheet.model.project.ActivityPaginationResponse;
 import com.timeSheet.model.project.AddMembersRequest;
@@ -40,6 +48,7 @@ import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserDetailResponse;
 import com.timeSheet.model.usermgmt.UserHour;
 import com.timeSheet.model.usermgmt.UserHourResponse;
+import com.timeSheet.model.usermgmt.UserSessionProfile;
 import com.timeSheet.service.ProjectService;
 import com.timeSheet.service.UserMgmtService;
 
@@ -56,9 +65,16 @@ public class ProjectController {
 	@Autowired
 	UserMgmtService userMgmtService;
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/addProject")
-	public SuccessIDResponse addAndUpdateProject(@RequestBody AddProjectRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/addProject")
+	public SuccessIDResponse addAndUpdateProject(@RequestBody AddProjectRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 //			System.out.println("Request second"+JSONUtil.toJson(request));
 			Projects project = new Projects();
@@ -99,9 +115,16 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/getProjectById")
-	public ProjectDetailResponse getProjectDetail(@RequestBody ProjectDetailRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getProjectById")
+	public ProjectDetailResponse getProjectDetail(@RequestBody ProjectDetailRequest request,HttpServletRequest servletRequest){
 		ProjectDetailResponse response = new ProjectDetailResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			Projects project = projectService.getProjectById(request.getProjectId());
 			response.setProject(project);
@@ -115,9 +138,16 @@ public class ProjectController {
 		return response;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/getProjectList")
-	public ProjectListResponse getProjectList(@RequestBody ProjectDetailRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getProjectList")
+	public ProjectListResponse getProjectList(@RequestBody ProjectDetailRequest request,HttpServletRequest servletRequest){
 		ProjectListResponse response = new ProjectListResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			List<ProjectDetail> projects = projectService.getProjectList(request.getOrgId());
 			response.setProjects(projects);
@@ -131,9 +161,16 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/addMembers")
-	public SuccessIDResponse addMembers(@RequestBody AddMembersRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/addMembers")
+	public SuccessIDResponse addMembers(@RequestBody AddMembersRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			ProjectUserMapping projectUser = new ProjectUserMapping(); 
 //			System.out.println("Request "+JSONUtil.toJson(request));
@@ -162,9 +199,16 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/projectPagination")
-	public ProjectPaginationResponse projectPagination(@RequestBody ProjectPaginatoinRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/projectPagination")
+	public ProjectPaginationResponse projectPagination(@RequestBody ProjectPaginatoinRequest request,HttpServletRequest servletRequest){
 		ProjectPaginationResponse response = new ProjectPaginationResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			int from=1;
 			int to=10;
@@ -189,9 +233,16 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/searchProject")
-	public ProjectListResponse searchUserDetail(@RequestBody SearchProjectRequest request){
+	@RequestMapping(method = RequestMethod.POST, value="/secured/searchProject")
+	public ProjectListResponse searchUserDetail(@RequestBody SearchProjectRequest request,HttpServletRequest servletRequest){
 		ProjectListResponse response = new ProjectListResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			List<ProjectDetail> projectDetail = projectService.searchProjectDetail(request.getProjectDetail().getProjectName(),request.getProjectDetail().getProjectType(),request.getOrgId());
 			response.setProjects(projectDetail);
@@ -265,9 +316,16 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value ="/removeMember")
-	public SuccessIDResponse removeMember(@RequestBody RemoveMemberRequest request){
+	@RequestMapping(method = RequestMethod.POST, value ="/secured/removeMember")
+	public SuccessIDResponse removeMember(@RequestBody RemoveMemberRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			ProjectUserMapping mapping = projectService.getByProjectAndUserId(request.getProjectId(), request.getUserId(),request.getOrgId());
 			mapping.setIsChecked("false");
@@ -378,6 +436,22 @@ public class ProjectController {
 			response.setSuccess(false);
 		}
 		return response;
+	}
+	
+	private void getActivity(HttpServletRequest request) {
+		Cookie cookie = UuidProfile.getCookie(request, "userState");
+		if(cookie != null) {
+			User userToken  =  userMgmtService.getUserProfileToken(cookie.getValue());
+			if(userToken != null){
+				long roleId = userMgmtService.getUserRoleId(userToken.getId());
+				UserSessionProfile userSessionProfile = new UserSessionProfile();
+				userSessionProfile.setAdminId(roleId);
+				userSessionProfile.setId(userToken.getId());
+				userSessionProfile.setSecureToken(cookie.getValue());
+				CacheService ehcs = new EhCacheServiceImpl();
+				ehcs.putCache(cookie.getValue(), userSessionProfile);
+			}
+		}
 	}
 	
 }

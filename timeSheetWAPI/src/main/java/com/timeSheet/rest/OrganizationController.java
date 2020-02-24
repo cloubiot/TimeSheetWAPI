@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.timeSheet.clib.cache.CacheService;
+import com.timeSheet.clib.cache.EhCacheServiceImpl;
 import com.timeSheet.clib.service.EmailService;
 import com.timeSheet.clib.service.EmailTemplateService;
+import com.timeSheet.clib.util.AuthUtil;
 import com.timeSheet.clib.util.SecureData;
+import com.timeSheet.clib.util.UuidProfile;
 import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRoleMapping;
@@ -30,6 +37,7 @@ import com.timeSheet.model.organization.SearchOrgRequest;
 import com.timeSheet.model.organization.SearchOrgResponse;
 import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserDetailResponse;
+import com.timeSheet.model.usermgmt.UserSessionProfile;
 import com.timeSheet.service.OrganizationService;
 import com.timeSheet.service.UserMgmtService;
 
@@ -75,9 +83,16 @@ public class OrganizationController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/getOrganization")
-	public OrganizationResponse getUserDetail(){
+	@RequestMapping(method = RequestMethod.GET, value = "/secured/getOrganization/{userId}")
+	public OrganizationResponse getUserDetail(@PathVariable int userId,HttpServletRequest servletRequest){
 		OrganizationResponse response = new OrganizationResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isAdminAuthorized(response,userId,servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,userId,servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			List<OrganizationDetails> orgList = organizationService.getOrganization();
 //			System.out.println(JSONUtil.toJson(userDetail));
@@ -174,5 +189,21 @@ public class OrganizationController {
 		emailMessage.setSubject(subject);
 		emailMessage.setEmailBody(emailBody);
 		emailService.sendEmail(mail, subject, emailBody);
+	}
+	
+	private void getActivity(HttpServletRequest request) {
+		Cookie cookie = UuidProfile.getCookie(request, "userState");
+		if(cookie != null) {
+			User userToken  =  userMgmtService.getUserProfileToken(cookie.getValue());
+			if(userToken != null){
+				long roleId = userMgmtService.getUserRoleId(userToken.getId());
+				UserSessionProfile userSessionProfile = new UserSessionProfile();
+				userSessionProfile.setAdminId(roleId);
+				userSessionProfile.setId(userToken.getId());
+				userSessionProfile.setSecureToken(cookie.getValue());
+				CacheService ehcs = new EhCacheServiceImpl();
+				ehcs.putCache(cookie.getValue(), userSessionProfile);
+			}
+		}
 	}
 }

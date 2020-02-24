@@ -29,7 +29,6 @@ public class AuthUtil {
 //		UserSessionProfile adminUser =   (UserSessionProfile) request.getSession().getAttribute("adminUser");
 		CacheService cs = new EhCacheServiceImpl();
 		UserSessionProfile adminUser = cs.getCache(request);
-		System.out.println("#####"+JSONUtil.toJson(adminUser));
 		if(adminUser != null) {
 			if(adminUser.getAdminId() > 3) {
 				baseResponse.setSuccess(false);
@@ -47,7 +46,6 @@ public class AuthUtil {
 //		UserSessionProfile adminUser =   (UserSessionProfile) request.getSession().getAttribute("adminUser");
 		CacheService cs = new EhCacheServiceImpl();
 		UserSessionProfile adminUser = cs.getCache(request);
-		System.out.println("#####"+JSONUtil.toJson(adminUser));
 		if(adminUser != null) {
 			if(adminUser.getAdminId() > 1) {
 				baseResponse.setSuccess(false);

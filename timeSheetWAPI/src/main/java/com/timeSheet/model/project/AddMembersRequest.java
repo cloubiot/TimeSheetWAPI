@@ -5,6 +5,7 @@ public class AddMembersRequest {
 	int projectId;
 	String[] id = {};
     int orgId;
+    int userId;
 	
 	public int getProjectId() {
 		return projectId;
@@ -28,6 +29,14 @@ public class AddMembersRequest {
 
 	public void setOrgId(int orgId) {
 		this.orgId = orgId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 	

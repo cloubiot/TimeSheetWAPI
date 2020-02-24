@@ -6,6 +6,7 @@ public class UserPaginationRequest {
 	String name;
 	int value;
 	int orgId;
+	int userId;
 	
 	public String getEmail() {
 		return email;
@@ -30,6 +31,12 @@ public class UserPaginationRequest {
 	}
 	public void setOrgId(int orgId) {
 		this.orgId = orgId;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 	

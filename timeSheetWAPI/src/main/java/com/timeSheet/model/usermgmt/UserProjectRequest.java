@@ -4,7 +4,7 @@ public class UserProjectRequest {
 
 	int projectId;
 	int orgId;
-	
+	int userId;
 	
 	public int getProjectId() {
 		return projectId;
@@ -17,6 +17,12 @@ public class UserProjectRequest {
 	}
 	public void setOrgId(int orgId) {
 		this.orgId = orgId;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 	

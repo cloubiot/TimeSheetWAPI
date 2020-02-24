@@ -6,6 +6,7 @@ public class AddProjectRequest {
 	
 	Projects project;
 	String id[] = {};
+	int userId;
 	
 	public Projects getProject() {
 		return project;
@@ -21,6 +22,14 @@ public class AddProjectRequest {
 
 	public void setId(String[] id) {
 		this.id = id;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 	

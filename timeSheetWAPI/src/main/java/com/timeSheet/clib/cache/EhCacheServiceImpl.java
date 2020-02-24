@@ -16,11 +16,11 @@ public class EhCacheServiceImpl implements CacheService{
 	public void putCache(String key,UserSessionProfile value) {
 		CacheManager manager = CacheManager.create();
 		Cache cache = manager.getCache("userProfileCache");
+		System.out.println("^^^^^^"+JSONUtil.toJson(value));
 		cache.put(new Element(key, value));
 	}
 	
 	public  UserSessionProfile getCache(HttpServletRequest request) {
-		System.out.println("@@@@"+JSONUtil.toJson(request));
 		Cookie cookie = UuidProfile.getCookie(request, "userState");
 		CacheManager manager = CacheManager.create();
 		Cache cache = manager.getCache("userProfileCache");

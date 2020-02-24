@@ -31,8 +31,8 @@ public class UuidProfile {
 	
 	public static void putSessionProfile(String secureToken,HttpServletResponse response,UserSessionProfile userSessionProfile) {
 		Cookie cookie = setCookie("userState",secureToken);
-		System.out.println("%%%%%%"+JSONUtil.toJson(cookie));
         response.addCookie(cookie);
+        System.out.println("####"+JSONUtil.toJson(cookie));
         CacheService cs = new EhCacheServiceImpl();
         cs.putCache(cookie.getValue(), userSessionProfile);
 //		UuidProfile.putCache(cookie.getValue(), userSessionProfile);
@@ -48,10 +48,10 @@ public class UuidProfile {
 //	}
 	public static Cookie getCookie(HttpServletRequest request, String name) {
 		 Cookie[] cookies = request.getCookies();
+//		 Cookie ck = new Cookie(name,"155e571c5b1f49ce9b95d7259495583a");
 		    if (cookies != null) {
 		        for (Cookie cookie : cookies) {
 		            if (cookie.getName().equals(name)) {
-		            	System.out.println("*****"+cookie.getName());
 		                return cookie;
 		            }
 		        }

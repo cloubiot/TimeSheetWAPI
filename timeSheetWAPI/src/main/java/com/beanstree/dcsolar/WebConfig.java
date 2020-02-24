@@ -7,6 +7,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.timeSheet.clib.util.MyCounterInterceptor;
+
+
 @Configuration
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -24,6 +27,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 			.allowCredentials(false).maxAge(3600);
 			*/
 	}
+	 @Override
+	    public void addInterceptors (InterceptorRegistry registry) {
+		 
+	        registry.addInterceptor(new MyCounterInterceptor());
+	 }
 	/*@Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(requestInterceptor);

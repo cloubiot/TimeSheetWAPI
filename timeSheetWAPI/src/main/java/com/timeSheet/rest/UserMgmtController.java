@@ -82,10 +82,16 @@ public class UserMgmtController {
 	private EmailTemplateService emailTemplateService;
 	
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/registerUser")
-	public SuccessIDResponse registerUser(@RequestBody UserSignupRequest request) {
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/registerUser")
+	public SuccessIDResponse registerUser(@RequestBody UserSignupRequest request,HttpServletRequest servletRequest) {
 		SuccessIDResponse response = new SuccessIDResponse();
-		
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			User user = new User();
 			UserRoleMapping roleMapping = new UserRoleMapping();
@@ -154,7 +160,6 @@ public class UserMgmtController {
 			}
 			try{
 				for(User retUser: user) {
-					System.out.println("&&&&&"+JSONUtil.toJson(retUser));
 				long roleId = userMgmtService.getUserRoleId(retUser.getId());
 				response.setOrgId(retUser.getOrgId());
 				response.setRoleId(roleId);
@@ -167,7 +172,6 @@ public class UserMgmtController {
 			}catch(Exception e){
 				logger.error("roleId not available", e);
 			}
-	
 		}
 		catch(Exception e){
 			logger.error("login Failed",e);
@@ -415,9 +419,16 @@ public class UserMgmtController {
 		}
 		return response;
 }
-	@RequestMapping(method = RequestMethod.POST, value = "/getUserList")
-	public UserListResponse getUserList(@RequestBody UserProjectRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getUserList")
+	public UserListResponse getUserList(@RequestBody UserProjectRequest request,HttpServletRequest servletRequest){
 		UserListResponse response = new UserListResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			List<UserWithRole> user = userMgmtService.getUserList(request.getProjectId(),request.getOrgId());
 			response.setUser(user);
@@ -446,18 +457,18 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/getUserDetails/{id}")
-	public UserDetailResponse getUserDetail(@PathVariable int id,HttpServletRequest servletRequest){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getUserDetails")
+	public UserDetailResponse getUserDetail(@RequestBody ActiveRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
-//		getActivity(servletRequest);
-//		if(!AuthUtil.isAdminAuthorized(response,1,servletRequest)) {
-//			if(!AuthUtil.isAuthorized(response,1,servletRequest)) {
-//				return response;
-//			}
-//			return response;
-//		}
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
-			List<UserDetail> userDetail = userMgmtService.getUserDetail(id);
+			List<UserDetail> userDetail = userMgmtService.getUserDetail(request.getOrgId());
 //			System.out.println(JSONUtil.toJson(userDetail));
 			response.setUserDetail(userDetail);
 			logger.info("user Details");
@@ -487,9 +498,16 @@ public class UserMgmtController {
 	}
 	
 	
-	@RequestMapping(method = RequestMethod.GET, value="/getUser/{id}")
-	public UserProfile getUser(@PathVariable int id){
+	@RequestMapping(method = RequestMethod.GET, value="/secured/getUser/{id}")
+	public UserProfile getUser(@PathVariable int id,HttpServletRequest servletRequest){
 		UserProfile response = new UserProfile();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,id,servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,id,servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			User user = userMgmtService.getUserById(id);
 			response.setUser(user);
@@ -505,9 +523,16 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/getUserByPagination")
-	public UserDetailResponse getUserByPagination(@RequestBody UserPaginationRequest request){
+	@RequestMapping(method = RequestMethod.POST, value="/secured/getUserByPagination")
+	public UserDetailResponse getUserByPagination(@RequestBody UserPaginationRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			int from=1;
 			int to=10;
@@ -533,9 +558,16 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/searchUserDetail")
-	public UserDetailResponse searchUserDetail(@RequestBody SearchUserDetailRequest request){
+	@RequestMapping(method = RequestMethod.POST, value="/secured/searchUserDetail")
+	public UserDetailResponse searchUserDetail(@RequestBody SearchUserDetailRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			List<UserDetail> userDetail = userMgmtService.searchUserDetail(request.getUserDetail().getFirstName(),request.getUserDetail().getEmail(), 
 											request.getUserDetail().getPhoneNumber(),request.getUserDetail().getDesc(),request.getUserDetail().getActive(),request.getOrgId());
@@ -596,11 +628,18 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/getUserByProjectId/{id}")
-	public UserDetailResponse getUserByProjectId(@PathVariable int id){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getUserByProjectId")
+	public UserDetailResponse getUserByProjectId(@RequestBody ActiveRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
-			List<UserDetail> userDetail = userMgmtService.getUserByProjectId(id);
+			List<UserDetail> userDetail = userMgmtService.getUserByProjectId(request.getProjectId());
 			response.setUserDetail(userDetail);
 			logger.info("user success");
 		}
@@ -611,9 +650,13 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/getRoles")
-	public RoleResponse getRoles(){
+	@RequestMapping(method = RequestMethod.GET, value = "/secured/getRoles")
+	public RoleResponse getRoles(HttpServletRequest servletRequest){
 		RoleResponse response = new RoleResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,1,servletRequest)) {
+				return response;
+		}
 		try{
 			List<UserRole> userRole = userMgmtService.getRoles();
 			response.setUserRole(userRole);
