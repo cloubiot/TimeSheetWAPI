@@ -338,9 +338,13 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/getUserProject")
-	public ProjectListResponse getUserByProject(@RequestBody RemoveMemberRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getUserProject")
+	public ProjectListResponse getUserByProject(@RequestBody RemoveMemberRequest request,HttpServletRequest servletRequest){
 		ProjectListResponse response = new ProjectListResponse();
+		getActivity(servletRequest);
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
 		try{
 			List<ProjectDetail> userProjects = projectService.getUserProject(request.getUserId(),request.getOrgId());
 			response.setProjects(userProjects);
@@ -353,9 +357,13 @@ public class ProjectController {
 		return response;
 		
 	}
-	@RequestMapping(method = RequestMethod.POST, value = "/getActivityById")
-	public ReportResponse getActivityById(@RequestBody ReportRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getActivityById")
+	public ReportResponse getActivityById(@RequestBody ReportRequest request,HttpServletRequest servletRequest){
 		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+			return response;
+		}
 		try{
 			Activities activities = projectService.getActivityById(request.getActivityId());
 			response.setActivities(activities);
@@ -369,9 +377,16 @@ public class ProjectController {
 		
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/searchActivity")
-	public ActivityPaginationResponse searchActivity(@RequestBody ActivityPaginationRequest request){
+	@RequestMapping(method = RequestMethod.POST, value="/secured/searchActivity")
+	public ActivityPaginationResponse searchActivity(@RequestBody ActivityPaginationRequest request,HttpServletRequest servletRequest){
 		ActivityPaginationResponse response = new ActivityPaginationResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			List<Activities> activities = projectService.searchActivity(request.getActivityDetail().getActivity(),request.getOrgId());
 			response.setActivity(activities);
@@ -385,9 +400,16 @@ public class ProjectController {
 		
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/activityPagination")
-	public ActivityPaginationResponse activityPagination(@RequestBody ActivityPaginationRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/activityPagination")
+	public ActivityPaginationResponse activityPagination(@RequestBody ActivityPaginationRequest request,HttpServletRequest servletRequest){
 		ActivityPaginationResponse response = new ActivityPaginationResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 			int from=1;
 			int to=10;
@@ -412,9 +434,16 @@ public class ProjectController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/addActivity")
-	public SuccessIDResponse addActivity(@RequestBody ReportRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/addActivity")
+	public SuccessIDResponse addActivity(@RequestBody ReportRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try{
 //			System.out.println("Request second"+JSONUtil.toJson(request));
 			Activities activities= new  Activities();

@@ -8,6 +8,7 @@ public class ActivityPaginationRequest {
     Activities activityDetail;
     int orgId;
     String activity;
+    int userId;
 	
 	public int getValue() {
 		return value;
@@ -39,6 +40,14 @@ public class ActivityPaginationRequest {
 
 	public void setActivity(String activity) {
 		this.activity = activity;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 }

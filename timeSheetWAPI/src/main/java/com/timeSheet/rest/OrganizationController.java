@@ -106,9 +106,16 @@ public class OrganizationController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/searchOrg")
-	public SearchOrgResponse searchOrganization(@RequestBody SearchOrgRequest request) {
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/searchOrg")
+	public SearchOrgResponse searchOrganization(@RequestBody SearchOrgRequest request,HttpServletRequest servletRequest) {
 		SearchOrgResponse response = new SearchOrgResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isAdminAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		
 		try{
 			List<OrganizationDetails> orgDetails = organizationService.searchOrg(request.getOrgDetail().getName());
@@ -122,9 +129,16 @@ public class OrganizationController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/orgPagination")
-	public SearchOrgResponse orgPagination(@RequestBody SearchOrgRequest request) {
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/orgPagination")
+	public SearchOrgResponse orgPagination(@RequestBody SearchOrgRequest request,HttpServletRequest servletRequest) {
 		SearchOrgResponse response = new SearchOrgResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isAdminAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		
 		try{
 			int from=1;

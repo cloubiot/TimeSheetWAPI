@@ -9,6 +9,7 @@ public class TimeSheetListRequest {
 	int roleId;
 	int value;
     Date date_1;
+    int orgId;
 	
 public int getUserId() {
 		return userId;
@@ -48,6 +49,14 @@ public int getUserId() {
 
 	public void setDate_1(Date date_1) {
 		this.date_1 = date_1;
+	}
+
+	public int getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

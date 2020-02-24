@@ -2187,3 +2187,12 @@ Contains: Missing mysql:mysql-connector-java:jar:javadoc:5.1.6
 !MESSAGE Could not resolve artifact mysql:mysql-connector-java:jar:javadoc:5.1.6
 !SUBENTRY 2 org.eclipse.m2e.core 4 -1 2019-07-22 17:07:30.110
 !MESSAGE Missing mysql:mysql-connector-java:jar:javadoc:5.1.6
+
+!ENTRY org.eclipse.jface.text 2 0 2020-02-24 12:19:16.833
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+
+!ENTRY org.eclipse.recommenders.models.rcp 1 0 2020-02-24 12:19:18.299
+!MESSAGE org.eclipse.recommenders:index::zip:0.0.0 could not be resolved from the model repositories. Are you offline?
+
+!ENTRY org.eclipse.jface.text 2 0 2020-02-24 19:45:03.064
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'

@@ -19,21 +19,22 @@
     <!-- Default set of monitored resources. If one of these changes, the    -->
     <!-- web application will be reloaded.                                   -->
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
     <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
 
     <!-- Uncomment this to disable session persistence across Tomcat restarts -->
     <!--
     <Manager pathname="" />
-    -->
-    <ResourceLink global="swastikaDB3" name="swastikaDB3" type="javax.sql.DataSource"/>
-              
-     <ResourceLink global="avella" name="avella" type="javax.sql.DataSource"/>
+    --><ResourceLink global="avella" name="avella" type="javax.sql.DataSource"/>
               
         <ResourceLink global="nabard" name="nabard" type="javax.sql.DataSource"/>
               
              <ResourceLink global="dcsolar" name="dcsolar" type="javax.sql.DataSource"/>
               <ResourceLink global="grocery" name="grocery" type="javax.sql.DataSource"/>
               
-              <ResourceLink global="bizconnect" name="bizconnect" type="javax.sql.DataSource"/>
+     NNBBVV              <ResourceLink global="bizconnect" name="bizconnect" type="javax.sql.DataSource"/>
                <ResourceLink global="cloubiotproject" name="cloubiotproject" type="javax.sql.DataSource"/>
+                <ResourceLink global="jeweldb" name="jeweldb" type="javax.sql.DataSource"/>
+                <ResourceLink global="skyrate" name="skyrate" type="javax.sql.DataSource"/>
+                
 </Context>

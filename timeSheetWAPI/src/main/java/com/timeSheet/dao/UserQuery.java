@@ -97,7 +97,7 @@ public class UserQuery {
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
 				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
-				+"where FIRST_NAME like '%"+name+"%' and EMAIL like '%"+email+"%' and user.org_id="+orgId+" and (ACTIVE != 'false')";
+				+"where FIRST_NAME like '%"+name+"%' and EMAIL like '%"+email+"%' and user.org_id="+orgId;
 		query+=" limit "+from+" ,"+to;
 //		System.out.println("#####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));

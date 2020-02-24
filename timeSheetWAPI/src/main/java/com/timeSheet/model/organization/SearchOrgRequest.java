@@ -5,6 +5,7 @@ public class SearchOrgRequest {
 	OrganizationDetails orgDetail;
 	String name;
 	int value;
+	int userId;
 	
 	public OrganizationDetails getOrgDetail() {
 		return orgDetail;
@@ -23,6 +24,12 @@ public class SearchOrgRequest {
 	}
 	public void setValue(int value) {
 		this.value = value;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 	

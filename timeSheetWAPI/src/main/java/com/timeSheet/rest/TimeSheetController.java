@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.timeSheet.clib.cache.CacheService;
+import com.timeSheet.clib.cache.EhCacheServiceImpl;
 import com.timeSheet.clib.model.SuccessIDResponse;
+import com.timeSheet.clib.util.AuthUtil;
 import com.timeSheet.clib.util.DateTimeUtil;
 import com.timeSheet.clib.util.JSONUtil;
+import com.timeSheet.clib.util.UuidProfile;
 import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
+import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.timesheet.Activities;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
@@ -38,9 +46,11 @@ import com.timeSheet.model.timesheet.TimeSheetListResponse;
 import com.timeSheet.model.timesheet.TimeSheetRequest;
 import com.timeSheet.model.timesheet.Timesheet;
 import com.timeSheet.model.usermgmt.UserListResponse;
+import com.timeSheet.model.usermgmt.UserSessionProfile;
 import com.timeSheet.model.usermgmt.UserWithRole;
 import com.timeSheet.service.ProjectService;
 import com.timeSheet.service.TimeSheetServcie;
+import com.timeSheet.service.UserMgmtService;
 
 
 @RestController
@@ -52,8 +62,14 @@ public class TimeSheetController {
 	
 	@Autowired
 	TimeSheetServcie timeSheetService;
+	
+	
 	@Autowired
 	ProjectService projectService;
+	
+
+	@Autowired
+	UserMgmtService userMgmtService;
 	
 //	@RequestMapping(method = RequestMethod.POST, value="/updateTimeSheet")
 //	public SuccessIDResponse updateTimeSheet(@RequestBody TimeSheetRequest request){
@@ -95,10 +111,13 @@ public class TimeSheetController {
 //		return response;
 //	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/addNewRecord")
-	public SuccessIDResponse timesheetReport(@RequestBody TimeSheetRequest request){
+	@RequestMapping(method = RequestMethod.POST, value="/secured/addNewRecord")
+	public SuccessIDResponse timesheetReport(@RequestBody TimeSheetRequest request,HttpServletRequest servletRequest){
 	SuccessIDResponse response = new SuccessIDResponse();
-	System.out.println("++++"+JSONUtil.toJson(request));
+	getActivity(servletRequest);
+		if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+			return response;
+		}
 	try {
 		
 		for( int i = 0;i < request.getTimeSheet().length;i++) {
@@ -159,11 +178,18 @@ public class TimeSheetController {
 		}
 		return response;
 	}
-	@RequestMapping(method = RequestMethod.GET, value = "/getProject/{orgId}")
-	public ReportResponse getProject(@PathVariable int orgId) {
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getProject")
+	public ReportResponse getProject(@RequestBody TimeSheetListRequest request,HttpServletRequest servletRequest) {
 		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 		try {
-			List<Project> project = timeSheetService.getProject(orgId);
+			List<Project> project = timeSheetService.getProject(request.getOrgId());
 			response.setProject(project);
 			logger.info("project list");
 	}
@@ -173,9 +199,13 @@ public class TimeSheetController {
 		}
 	return response;
 	}
-	@RequestMapping(method = RequestMethod.POST, value = "/getTimeSheet")
-	public ReportResponse getReportview(@RequestBody ReportRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getTimeSheet")
+	public ReportResponse getReportview(@RequestBody ReportRequest request,HttpServletRequest servletRequest){
 		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+			return response;
+		}
 		try{
 			List<Reportview> reportviews = timeSheetService.getReportview(request.getUserId(),request.getDate());
 			response.setReportview(reportviews);
@@ -188,9 +218,16 @@ public class TimeSheetController {
 		}
 		return response;
 	}
-	@RequestMapping(method = RequestMethod.POST, value = "/getReportlist")
-	public ReportResponse getReportlist(@RequestBody ReportRequest request) {
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getReportlist")
+	public ReportResponse getReportlist(@RequestBody ReportRequest request,HttpServletRequest servletRequest) {
 		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
 //		System.out.println(" @@@@@@ "+JSONUtil.toJson(request));
 		try {
 			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getUserName(),request.getDate1(),request.getDate2(),request.getProjectName(),request.getActivityName(),request.getOrgId());
@@ -204,11 +241,11 @@ public class TimeSheetController {
 		}
 	return response;
 	}
-	@RequestMapping(method = RequestMethod.GET, value = "/getActivity/{orgId}")
-	public ReportResponse getActivity(@PathVariable int orgId) {
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getActivity")
+	public ReportResponse getActivity(@RequestBody TimeSheetListRequest request) {
 		ReportResponse response = new ReportResponse();
 		try {
-			List<Activities> activity = timeSheetService.getActivity(orgId);
+			List<Activities> activity = timeSheetService.getActivity(request.getOrgId());
 			response.setActivity(activity);
 			logger.info("project list");
 	}
@@ -278,5 +315,21 @@ public class TimeSheetController {
 		}
 		return response;
 		
+	}
+
+	private void getActivity(HttpServletRequest request) {
+		Cookie cookie = UuidProfile.getCookie(request, "userState");
+		if(cookie != null) {
+			User userToken  =  userMgmtService.getUserProfileToken(cookie.getValue());
+			if(userToken != null){
+				long roleId = userMgmtService.getUserRoleId(userToken.getId());
+				UserSessionProfile userSessionProfile = new UserSessionProfile();
+				userSessionProfile.setAdminId(roleId);
+				userSessionProfile.setId(userToken.getId());
+				userSessionProfile.setSecureToken(cookie.getValue());
+				CacheService ehcs = new EhCacheServiceImpl();
+				ehcs.putCache(cookie.getValue(), userSessionProfile);
+			}
+		}
 	}
 }

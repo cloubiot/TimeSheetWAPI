@@ -8,7 +8,6 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +103,7 @@ public class UserMgmtController {
 				user = new User();
 				user.setPassword(sd.encrypt(newPassword.generateRandomString()));
 				String password = sd.decrypt(user.getPassword());
-				user.setActive("true");
+				user.setActive(request.getActive());
 				user.setSecureToken(secureToken);
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("firstName", request.getFirstName());
@@ -154,7 +153,7 @@ public class UserMgmtController {
 			if(!user.isEmpty()){
 				response.setUser(user);
 			}
-			else{
+			else{	
 				response.setSuccess(false);
 				logger.info("invalid login");
 			}
@@ -356,9 +355,13 @@ public class UserMgmtController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/changePassword")
-	public SuccessIDResponse changePassword(@RequestBody ChangePasswordRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/changePassword")
+	public SuccessIDResponse changePassword(@RequestBody ChangePasswordRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
+		getActivity(servletRequest);
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
 //		System.out.println("#####"+JSONUtil.toJson(request));
 		try{
 //			System.out.println(request.getUserId());
@@ -386,9 +389,13 @@ public class UserMgmtController {
 		}
 		return response;
 	}
-	@RequestMapping(method = RequestMethod.POST, value = "/updateUserProfile")
-	public UpdateUserProfileResponse updateUserProfile(@RequestBody UpdateUserProfileRequest request){
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/updateUserProfile")
+	public UpdateUserProfileResponse updateUserProfile(@RequestBody UpdateUserProfileRequest request,HttpServletRequest servletRequest){
 		UpdateUserProfileResponse response = new UpdateUserProfileResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isAuthorized(response,request.getUser().getId(),servletRequest)) {
+			return response;
+		}
 		try{
 			User user = userMgmtService.getUserById(request.getUser().getId());
 			user.setEmail(request.getUser().getEmail());
