@@ -215,6 +215,7 @@ public class OrganizationController {
 				userSessionProfile.setAdminId(roleId);
 				userSessionProfile.setId(userToken.getId());
 				userSessionProfile.setSecureToken(cookie.getValue());
+				userSessionProfile.setOrgId(userToken.getOrgId());
 				CacheService ehcs = new EhCacheServiceImpl();
 				ehcs.putCache(cookie.getValue(), userSessionProfile);
 			}

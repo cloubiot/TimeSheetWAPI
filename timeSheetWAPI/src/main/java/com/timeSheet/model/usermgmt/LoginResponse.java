@@ -11,6 +11,7 @@ public class LoginResponse extends BaseResponse{
 	List<User> user;
 	long roleId;
 	long orgId;
+	String logo;
 
 //	public User getUser() {
 //		return user;
@@ -42,6 +43,14 @@ public class LoginResponse extends BaseResponse{
 
 	public void setOrgId(long orgId) {
 		this.orgId = orgId;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 	
 	

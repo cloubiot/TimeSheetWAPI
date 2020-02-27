@@ -14,6 +14,8 @@ import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserWithRole;
+import com.timeSheet.model.dbentity.Organization;
+
 
 @Service
 @Transactional
@@ -28,6 +30,13 @@ public class UserQuery {
 						+"where email='"+email+"' and password='"+password+"'";
 		List<User> user = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
 		return user;
+	}
+	public Organization orgLogin(String email,String password){
+		String query = "select user.id,org.logo,user_name,first_name,last_name,email,phone_number,profile_image_url,active,creation_date,updation_date,org_id,org.name as taxRate,secure_token from user "
+				        +"left join organization as org on org.id = user.org_id "
+						+"where email='"+email+"' and password='"+password+"'";
+		Organization orgUser = (Organization) jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper(Organization.class));
+		return orgUser;
 	}
 	public User findByIdAndPassword(int id,String password) {
 		String query = "select * FROM cloubiotproject.user where id="+id+" and PASSWORD='"+password+"'";

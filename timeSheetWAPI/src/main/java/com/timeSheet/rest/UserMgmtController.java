@@ -85,7 +85,7 @@ public class UserMgmtController {
 	public SuccessIDResponse registerUser(@RequestBody UserSignupRequest request,HttpServletRequest servletRequest) {
 		SuccessIDResponse response = new SuccessIDResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getId(),servletRequest)) {
 				return response;
 			}
@@ -150,6 +150,8 @@ public class UserMgmtController {
 //			System.out.println(encryptedPassword);
 			UserProfile userProfile = new UserProfile();
 			List<User> user = userMgmtService.login(request.getUserName(), encryptedPassword);
+			Organization org = userMgmtService.orgLogin(request.getUserName(), encryptedPassword);
+			response.setLogo(org.getLogo());
 			if(!user.isEmpty()){
 				response.setUser(user);
 			}
@@ -166,6 +168,7 @@ public class UserMgmtController {
 				userSessionProfile.setAdminId(roleId);
 				userSessionProfile.setId(retUser.getId());
 				userSessionProfile.setSecureToken(retUser.getSecureToken());
+				userSessionProfile.setOrgId(retUser.getOrgId());
 				UuidProfile.putSessionProfile(retUser.getSecureToken(),res,userSessionProfile);
 				}
 			}catch(Exception e){
@@ -430,7 +433,7 @@ public class UserMgmtController {
 	public UserListResponse getUserList(@RequestBody UserProjectRequest request,HttpServletRequest servletRequest){
 		UserListResponse response = new UserListResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -468,7 +471,7 @@ public class UserMgmtController {
 	public UserDetailResponse getUserDetail(@RequestBody ActiveRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getOrgId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -505,20 +508,20 @@ public class UserMgmtController {
 	}
 	
 	
-	@RequestMapping(method = RequestMethod.GET, value="/secured/getUser/{id}")
-	public UserProfile getUser(@PathVariable int id,HttpServletRequest servletRequest){
+	@RequestMapping(method = RequestMethod.POST, value="/secured/getUser")
+	public UserProfile getUser(@RequestBody UserProjectRequest request,HttpServletRequest servletRequest){
 		UserProfile response = new UserProfile();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,id,servletRequest)) {
-			if(!AuthUtil.isAuthorized(response,id,servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
 			return response;
 		}
 		try{
-			User user = userMgmtService.getUserById(id);
+			User user = userMgmtService.getUserById(request.getUserId());
 			response.setUser(user);
-			UserRoleMapping userRole = userMgmtService.getRoleByUserId(id);
+			UserRoleMapping userRole = userMgmtService.getRoleByUserId(request.getUserId());
 //			System.out.println(" "+JSONUtil.toJson(userRole));
 			response.setRoleId(userRole.getRoleId());
 			logger.info("Get full detail for user");
@@ -534,7 +537,7 @@ public class UserMgmtController {
 	public UserDetailResponse getUserByPagination(@RequestBody UserPaginationRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -569,7 +572,7 @@ public class UserMgmtController {
 	public UserDetailResponse searchUserDetail(@RequestBody SearchUserDetailRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -639,7 +642,7 @@ public class UserMgmtController {
 	public UserDetailResponse getUserByProjectId(@RequestBody ActiveRequest request,HttpServletRequest servletRequest){
 		UserDetailResponse response = new UserDetailResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -660,10 +663,6 @@ public class UserMgmtController {
 	@RequestMapping(method = RequestMethod.GET, value = "/secured/getRoles")
 	public RoleResponse getRoles(HttpServletRequest servletRequest){
 		RoleResponse response = new RoleResponse();
-		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,1,servletRequest)) {
-				return response;
-		}
 		try{
 			List<UserRole> userRole = userMgmtService.getRoles();
 			response.setUserRole(userRole);
@@ -693,6 +692,7 @@ public class UserMgmtController {
 				UserSessionProfile userSessionProfile = new UserSessionProfile();
 				userSessionProfile.setAdminId(roleId);
 				userSessionProfile.setId(userToken.getId());
+				userSessionProfile.setOrgId(userToken.getOrgId());
 				userSessionProfile.setSecureToken(cookie.getValue());
 				CacheService ehcs = new EhCacheServiceImpl();
 				ehcs.putCache(cookie.getValue(), userSessionProfile);

@@ -7,7 +7,8 @@ public class UserSessionProfile implements Serializable{
 	int id;
 	long adminId;
 	String secureToken;
-
+    int orgId;
+    
 	public int getId() {
 		return id;
 	}
@@ -30,6 +31,14 @@ public class UserSessionProfile implements Serializable{
 
 	public void setSecureToken(String secureToken) {
 		this.secureToken = secureToken;
+	}
+
+	public int getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

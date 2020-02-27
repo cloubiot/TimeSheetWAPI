@@ -182,7 +182,7 @@ public class TimeSheetController {
 	public ReportResponse getProject(@RequestBody TimeSheetListRequest request,HttpServletRequest servletRequest) {
 		ReportResponse response = new ReportResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -222,7 +222,7 @@ public class TimeSheetController {
 	public ReportResponse getReportlist(@RequestBody ReportRequest request,HttpServletRequest servletRequest) {
 		ReportResponse response = new ReportResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getId(),servletRequest)) {
 				return response;
 			}
@@ -230,7 +230,12 @@ public class TimeSheetController {
 		}
 //		System.out.println(" @@@@@@ "+JSONUtil.toJson(request));
 		try {
-			List<ReportList> reportlist =  timeSheetService.getReportlist(request.getUserName(),request.getDate1(),request.getDate2(),request.getProjectName(),request.getActivityName(),request.getOrgId());
+			String userName ="";
+			if(Integer.parseInt(request.getUserName()) != 0) {
+			  User user = userMgmtService.getUserById(Integer.parseInt(request.getUserName()));
+			  userName = user.getUserName();
+			}
+			List<ReportList> reportlist =  timeSheetService.getReportlist(userName,request.getDate1(),request.getDate2(),request.getProjectName(),request.getActivityName(),request.getOrgId());
 			response.setReportlist(reportlist);
 //			System.out.println(" @@@@@@ "+JSONUtil.toJson(reportlist));
 			logger.info("project list");
@@ -327,6 +332,7 @@ public class TimeSheetController {
 				userSessionProfile.setAdminId(roleId);
 				userSessionProfile.setId(userToken.getId());
 				userSessionProfile.setSecureToken(cookie.getValue());
+				userSessionProfile.setOrgId(userToken.getOrgId());
 				CacheService ehcs = new EhCacheServiceImpl();
 				ehcs.putCache(cookie.getValue(), userSessionProfile);
 			}

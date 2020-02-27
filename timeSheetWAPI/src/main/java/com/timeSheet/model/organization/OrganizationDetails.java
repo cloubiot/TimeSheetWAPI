@@ -12,6 +12,7 @@ public class OrganizationDetails {
 	String address;
 	int userCnt;
 	int projectCnt;
+	int activityCnt;
 	Date createdDate;
 	
 	
@@ -68,6 +69,12 @@ public class OrganizationDetails {
 	}
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	public int getActivityCnt() {
+		return activityCnt;
+	}
+	public void setActivityCnt(int activityCnt) {
+		this.activityCnt = activityCnt;
 	}
 	
 	

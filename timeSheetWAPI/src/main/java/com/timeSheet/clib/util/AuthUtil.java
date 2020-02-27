@@ -25,7 +25,7 @@ public class AuthUtil {
 		return baseResponse.isSuccess();
 	}
 	
-	public static  boolean isOrgAuthorized(BaseResponse baseResponse,int userId,HttpServletRequest request) {
+	public static  boolean isOrgAuthorized(BaseResponse baseResponse,int userId,int orgId,HttpServletRequest request) {
 //		UserSessionProfile adminUser =   (UserSessionProfile) request.getSession().getAttribute("adminUser");
 		CacheService cs = new EhCacheServiceImpl();
 		UserSessionProfile adminUser = cs.getCache(request);
@@ -33,6 +33,10 @@ public class AuthUtil {
 			if(adminUser.getAdminId() > 3) {
 				baseResponse.setSuccess(false);
 				baseResponse.setUserErrorMsg("Not Authorized");
+				
+			}else if(adminUser.getOrgId() != orgId && adminUser.getAdminId() > 1) {
+				baseResponse.setSuccess(false);
+				baseResponse.setUserErrorMsg("Admin Not Authorized");
 			}
 		}else {
 			baseResponse.setSuccess(false);

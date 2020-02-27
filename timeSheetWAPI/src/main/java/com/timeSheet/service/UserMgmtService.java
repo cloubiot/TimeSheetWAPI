@@ -44,9 +44,11 @@ public class UserMgmtService {
 	}
 	
 	public List<User> login(String email,String password){
-		return this.userQuery.login(email, password);	}
-	
-	
+		return this.userQuery.login(email, password);	
+	}
+	public Organization orgLogin(String email,String password){
+		return this.userQuery.orgLogin(email, password);	
+	}
 	public User getByUserName(String userName){
 		return this.userMgmtRepository.findByEmail(userName);
 	}

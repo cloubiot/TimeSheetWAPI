@@ -69,7 +69,7 @@ public class ProjectController {
 	public SuccessIDResponse addAndUpdateProject(@RequestBody AddProjectRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getProject().getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -119,7 +119,7 @@ public class ProjectController {
 	public ProjectDetailResponse getProjectDetail(@RequestBody ProjectDetailRequest request,HttpServletRequest servletRequest){
 		ProjectDetailResponse response = new ProjectDetailResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -142,7 +142,7 @@ public class ProjectController {
 	public ProjectListResponse getProjectList(@RequestBody ProjectDetailRequest request,HttpServletRequest servletRequest){
 		ProjectListResponse response = new ProjectListResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -165,7 +165,7 @@ public class ProjectController {
 	public SuccessIDResponse addMembers(@RequestBody AddMembersRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -203,7 +203,7 @@ public class ProjectController {
 	public ProjectPaginationResponse projectPagination(@RequestBody ProjectPaginatoinRequest request,HttpServletRequest servletRequest){
 		ProjectPaginationResponse response = new ProjectPaginationResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -237,7 +237,7 @@ public class ProjectController {
 	public ProjectListResponse searchUserDetail(@RequestBody SearchProjectRequest request,HttpServletRequest servletRequest){
 		ProjectListResponse response = new ProjectListResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -320,7 +320,7 @@ public class ProjectController {
 	public SuccessIDResponse removeMember(@RequestBody RemoveMemberRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getId(),servletRequest)) {
 				return response;
 			}
@@ -341,10 +341,10 @@ public class ProjectController {
 	@RequestMapping(method = RequestMethod.POST, value = "/secured/getUserProject")
 	public ProjectListResponse getUserByProject(@RequestBody RemoveMemberRequest request,HttpServletRequest servletRequest){
 		ProjectListResponse response = new ProjectListResponse();
-		getActivity(servletRequest);
-			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
-				return response;
-			}
+//		getActivity(servletRequest);
+//			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+//				return response;
+//			}
 		try{
 			List<ProjectDetail> userProjects = projectService.getUserProject(request.getUserId(),request.getOrgId());
 			response.setProjects(userProjects);
@@ -381,7 +381,7 @@ public class ProjectController {
 	public ActivityPaginationResponse searchActivity(@RequestBody ActivityPaginationRequest request,HttpServletRequest servletRequest){
 		ActivityPaginationResponse response = new ActivityPaginationResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -404,7 +404,7 @@ public class ProjectController {
 	public ActivityPaginationResponse activityPagination(@RequestBody ActivityPaginationRequest request,HttpServletRequest servletRequest){
 		ActivityPaginationResponse response = new ActivityPaginationResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -438,7 +438,7 @@ public class ProjectController {
 	public SuccessIDResponse addActivity(@RequestBody ReportRequest request,HttpServletRequest servletRequest){
 		SuccessIDResponse response = new SuccessIDResponse();
 		getActivity(servletRequest);
-		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),servletRequest)) {
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
 			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
 				return response;
 			}
@@ -477,6 +477,7 @@ public class ProjectController {
 				userSessionProfile.setAdminId(roleId);
 				userSessionProfile.setId(userToken.getId());
 				userSessionProfile.setSecureToken(cookie.getValue());
+				userSessionProfile.setOrgId(userToken.getOrgId());
 				CacheService ehcs = new EhCacheServiceImpl();
 				ehcs.putCache(cookie.getValue(), userSessionProfile);
 			}
