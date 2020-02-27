@@ -153,4 +153,18 @@ public class UserQuery {
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}
+	public List<User> findSecureToken(String token){
+		String query = "SELECT *,org.NAME as taxRate FROM user " 
+				       +"inner join organization as org on org.id = user.id "
+				       +"where secure_token='"+token+"'";
+		List<User> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
+		return userDetail;
+	}
+	public Organization orgLogo(String token){
+		String query = "select org.logo from user "
+				        +"left join organization as org on org.id = user.org_id "
+						+"where secure_token='"+token+"'";
+		Organization orgUser = (Organization) jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper(Organization.class));
+		return orgUser;
+	}
 }

@@ -1,5 +1,6 @@
 package com.timeSheet.rest;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import com.timeSheet.model.email.EmailMessage;
 import com.timeSheet.model.usermgmt.ActiveRequest;
 import com.timeSheet.model.usermgmt.AddCustomerRequest;
 import com.timeSheet.model.usermgmt.ChangePasswordRequest;
+import com.timeSheet.model.usermgmt.CookieRequest;
 import com.timeSheet.model.usermgmt.EmailIdExistRequest;
 import com.timeSheet.model.usermgmt.EmailIdExistResponse;
 import com.timeSheet.model.usermgmt.ForgotPasswordRequest;
@@ -150,8 +152,12 @@ public class UserMgmtController {
 //			System.out.println(encryptedPassword);
 			UserProfile userProfile = new UserProfile();
 			List<User> user = userMgmtService.login(request.getUserName(), encryptedPassword);
-			Organization org = userMgmtService.orgLogin(request.getUserName(), encryptedPassword);
-			response.setLogo(org.getLogo());
+			try {
+				Organization org = userMgmtService.orgLogin(request.getUserName(), encryptedPassword);
+				response.setLogo(org.getLogo());
+			}catch (Exception e) {
+				logger.error("orgId not available", e);
+			}
 			if(!user.isEmpty()){
 				response.setUser(user);
 			}
@@ -675,6 +681,71 @@ public class UserMgmtController {
 		return response;
 	}
 	
+	@RequestMapping( method = RequestMethod.POST, value = "/getUserActive")
+	public LoginResponse getUserCookies(@RequestBody CookieRequest request,HttpServletRequest servletRequest){
+		logger.info("Comming inside user activity");
+		LoginResponse response = new LoginResponse();
+		try{
+			  if(request.getValue() != null) {  
+				List<User> user = userMgmtService.getUserActive(request.getValue());
+				response.setUser(user);
+				try{
+				Organization org = userMgmtService.orgLogo(request.getValue());
+				response.setLogo(org.getLogo());
+				}catch (Exception e) {
+					logger.error("orgId not available", e);
+				}
+				
+				/* add login histoory */
+//				UserSessionProfile userSessionProfile = new UserSessionProfile();
+//				userSessionProfile.setId(userActive.getUserId());
+//				userSessionProfile.setSecureToken(request.getValue());
+//				servletRequest.getSession().setAttribute("UserSessionProfile", userSessionProfile);
+//				Cookie cookie = UuidProfile.getCookie(servletRequest, "AviationUUID");
+//				if(cookie != null) {
+//				UuidProfile.putCache((cookie == null ? null :cookie.getValue()), userSessionProfile);
+//				}else {
+//					Cookie cookie3 = UuidProfile.setCookie("AviationUUID",request.getValue());
+//					response.addCookie(cookie3);
+//					UuidProfile.putCache(cookie3.getValue(), userSessionProfile);		
+//				}
+				
+				
+				try{
+					for(User retUser: user) {
+					long roleId = userMgmtService.getUserRoleId(retUser.getId());
+					response.setOrgId(retUser.getOrgId());
+					UserSessionProfile userSessionProfile1 = new UserSessionProfile();
+					userSessionProfile1.setAdminId(roleId);
+					userSessionProfile1.setId(retUser.getId());
+					userSessionProfile1.setSecureToken(request.getValue());
+					Cookie cookie1 = UuidProfile.getCookie(servletRequest, "userState");
+					if(cookie1 != null) {
+					CacheService cs = new EhCacheServiceImpl();
+					cs.putCache((cookie1 == null ? null :cookie1.getValue()), userSessionProfile1);
+					}else {
+//					Cookie cookie2 = UuidProfile.setCookie("AviationUUID",request.getValue());
+//					response.addCookie(cookie2);
+//					UuidProfile.putCache(cookie2.getValue(), userSessionProfile1);	
+					UuidProfile.putSessionProfile(request.getValue(),response,userSessionProfile1);
+					}
+//					servletRequest.getSession().setAttribute("adminUser", userSessionProfile1);
+					response.setRoleId(roleId);
+				}
+				}catch(Exception e){
+					logger.error("roleId not available", e);
+				}
+				
+			}
+			
+		}
+		catch(Exception e){
+			logger.error("active failed",e);
+			response.setSuccess(false);
+			
+		}
+		return response;
+	}
 	public void sendEmail(String mail,String subject,String emailBody) {
 		EmailMessage emailMessage = new EmailMessage();
 		emailMessage.setToEmail(mail);

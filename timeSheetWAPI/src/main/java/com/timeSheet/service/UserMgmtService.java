@@ -120,4 +120,10 @@ public class UserMgmtService {
 	public User getUserProfileToken(String token) {
 		return this.userMgmtRepository.findBySecureToken(token);
 	}
+	public List<User> getUserActive(String token) {
+		return this.userQuery.findSecureToken(token);
+	}
+	public Organization orgLogo(String token){
+		return this.userQuery.orgLogo(token);	
+	}
 }
