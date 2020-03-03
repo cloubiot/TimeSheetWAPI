@@ -154,8 +154,8 @@ public class UserQuery {
 		return userDetail;
 	}
 	public List<User> findSecureToken(String token){
-		String query = "SELECT *,org.NAME as taxRate FROM user " 
-				       +"inner join organization as org on org.id = user.id "
+		String query = "SELECT *,user.id as id,org.NAME as taxRate FROM user " 
+				       +"inner join organization as org on org.id = user.org_id "
 				       +"where secure_token='"+token+"'";
 		List<User> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
 		return userDetail;

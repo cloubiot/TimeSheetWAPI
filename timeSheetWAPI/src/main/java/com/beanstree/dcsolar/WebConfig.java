@@ -1,7 +1,9 @@
 package com.beanstree.dcsolar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,6 +14,8 @@ import com.timeSheet.clib.util.MyCounterInterceptor;
 
 @Configuration
 @EnableWebMvc
+@EnableScheduling
+@ComponentScan({"com.timeSheet.*"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 	@Autowired
 	RequestInterceptor requestInterceptor;

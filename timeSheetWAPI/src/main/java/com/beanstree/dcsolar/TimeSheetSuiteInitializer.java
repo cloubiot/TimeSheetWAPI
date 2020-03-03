@@ -19,6 +19,7 @@ package com.beanstree.dcsolar;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+
 public class TimeSheetSuiteInitializer extends SpringBootServletInitializer {
 
 	

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[3.8.3.201612191259-RELEASE]]></pluginVersion>
+	<pluginVersion><![CDATA[3.9.7.201812201020-RELEASE]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
-		<config>java:com.beanstree.dcsolar.TimeSheetSuiteApplication</config>
+		<config>java:com.beanstree.monitor.TimeSheetSuiteApplication</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

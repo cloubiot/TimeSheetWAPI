@@ -715,6 +715,7 @@ public class UserMgmtController {
 					for(User retUser: user) {
 					long roleId = userMgmtService.getUserRoleId(retUser.getId());
 					response.setOrgId(retUser.getOrgId());
+					response.setRoleId(roleId);
 					UserSessionProfile userSessionProfile1 = new UserSessionProfile();
 					userSessionProfile1.setAdminId(roleId);
 					userSessionProfile1.setId(retUser.getId());
@@ -730,7 +731,6 @@ public class UserMgmtController {
 					UuidProfile.putSessionProfile(request.getValue(),response,userSessionProfile1);
 					}
 //					servletRequest.getSession().setAttribute("adminUser", userSessionProfile1);
-					response.setRoleId(roleId);
 				}
 				}catch(Exception e){
 					logger.error("roleId not available", e);
