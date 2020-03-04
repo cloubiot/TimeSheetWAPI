@@ -168,6 +168,14 @@ public class TimeSheetController {
 		ReportResponse response = new ReportResponse();
 		try{
 			List<Report> reportview = timeSheetService.getReport(request.getUserId());
+//			for(Report abc :reportview ) {
+//				SimpleDateFormat aaa =new SimpleDateFormat("MM/dd/yyyy");
+//				 String strDate = aaa.format(abc.getDate().replace("-", "/")); 
+//				Date vvv = aaa.parse(abc.getDate().replace("-", "/"));
+//				Date date1=new SimpleDateFormat("MM/dd/yyyy").parse(abc.getDate().replace("-", "/")); 
+//				
+//			System.out.println("####"+strDate);
+//			}
 			response.setReport(reportview);
 //			System.out.println(JSONUtil.toJson(reportview));
 			logger.info("employee Report");

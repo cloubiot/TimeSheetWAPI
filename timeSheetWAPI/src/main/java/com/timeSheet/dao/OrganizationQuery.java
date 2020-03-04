@@ -21,7 +21,7 @@ public class OrganizationQuery {
 	
 	
 	public List<OrganizationDetails> getOrganization(){
-		String query = "select o.id,o.name,o.created_date,(select count(*) from projects where org_id = o.id) as projectCnt,(select count(*) from user where org_id = o.id) as userCnt, " 
+		String query = "select o.id,o.name,o.created_date,o.type,o.address,(select count(*) from projects where org_id = o.id) as projectCnt,(select count(*) from user where org_id = o.id) as userCnt, " 
 				+"(select count(*) from activities where org_id = o.id) as activityCnt from organization as o " 
 				+"group by o.id " ;
 		List<OrganizationDetails> getOrganization = jdbcTemplate.query(query, new BeanPropertyRowMapper(OrganizationDetails.class));
