@@ -48,15 +48,20 @@ public class TimeSheetQuery {
 		return totalHrs;
 	}
 	public List<Report> getReport(int userId){
-		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID ="+userId+" and date  <= curdate() - INTERVAL DAYOFWEEK(curdate())-7 DAY and date > curdate() - INTERVAL DAYOFWEEK(curdate())-0 DAY order by date";
-//		System.out.println("&&&&&"+query);	
+		String query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,active "
+				+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) "
+				+ "inner join approval on approval.timesheet_id = timesheet.ID) "
+				+ "where timesheet.USER_ID ="+userId+" and date  <= curdate() - INTERVAL DAYOFWEEK(curdate())-7 DAY and date > curdate() - INTERVAL DAYOFWEEK(curdate())-0 DAY order by date";
 		List<Report> getReport = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
 		return getReport;
 	}
 	
 	public List<Reportview> getReportview(int userId,String date){
-		String query = "select USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK from ((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) inner join activities on activities.ID = timesheet.ACTIVITY_ID) where USER_ID = "+userId+" and date  <= '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-7 DAY and date > '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-0 DAY order by date";
-//		System.out.println("&&&&&"+query);	
+		String query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,active "
+				+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
+				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID) "
+				+ "inner join approval on approval.timesheet_id = timesheet.ID) "
+				+ "where timesheet.USER_ID ="+userId+" and date  <= '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-7 DAY and date > '"+date+"' - INTERVAL DAYOFWEEK('"+date+"')-0 DAY order by date";
 		List<Reportview> getReportview = jdbcTemplate.query(query, new BeanPropertyRowMapper(Reportview.class));
 		return getReportview;
 	}
@@ -113,6 +118,15 @@ public class TimeSheetQuery {
 		
 		List<ReportList> getReportlist = jdbcTemplate.query(query, new BeanPropertyRowMapper(ReportList.class));
 		return getReportlist;
+	}
+	public List<Report> updateApproval(int orgId){
+		String query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,approval.org_id "
+				+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
+				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID)  "
+				+ "inner join approval on approval.timesheet_id = timesheet.ID) "
+				+ "where approval.org_id ="+orgId+" and approval = 0 and active =1 order by  date";
+		List<Report> updateApproval = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
+		return updateApproval;
 	}
 	
 }

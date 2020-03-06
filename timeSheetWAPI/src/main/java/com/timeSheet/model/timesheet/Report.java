@@ -19,6 +19,9 @@ public class Report{
 	String activity;
 	double hrs;
 	String task;
+	int active;
+	int approval;
+	
 	public int getId() {
 		return id;
 	}
@@ -72,6 +75,18 @@ public class Report{
 	}
 	public void setTask(String task) {
 		this.task = task;
+	}
+	public int getActive() {
+		return active;
+	}
+	public void setActive(int active) {
+		this.active = active;
+	}
+	public int getApproval() {
+		return approval;
+	}
+	public void setApproval(int approval) {
+		this.approval = approval;
 	}
 	
 

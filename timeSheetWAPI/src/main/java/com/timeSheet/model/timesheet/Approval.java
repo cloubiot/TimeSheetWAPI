@@ -1,20 +1,30 @@
 package com.timeSheet.model.timesheet;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-public class TimeSheetRequest {
+@Entity
+public class Approval {
 
-	Timesheet[] timeSheet;
-	
+	@Id
+	@GeneratedValue
+	int id;
 	int userId;
 	int orgId;
 	int timesheetId;
 	int approval;
-	
-	public Timesheet[] getTimeSheet() {
-		return timeSheet;
+	public int getId() {
+		return id;
 	}
-	public void setTimeSheet(Timesheet[] timeSheet) {
-		this.timeSheet = timeSheet;
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	public int getOrgId() {
 		return orgId;
@@ -34,14 +44,6 @@ public class TimeSheetRequest {
 	public void setApproval(int approval) {
 		this.approval = approval;
 	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
 	
-
-
 	
 }

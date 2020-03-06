@@ -96,7 +96,7 @@ public class ProjectController {
 			for(int i=0; i < request.getId().length; i++){
 				//		System.out.println("Request second"+request.getId()[i]);
 						String value = request.getId()[i];
-						System.out.println("Request second kj"+value);
+//						System.out.println("Request second kj"+value);
 						int id = Integer.parseInt(value);
 						projectUser = projectService.getByProjectAndUserId(project.getId(),id,request.getProject().getOrgId());
 						if(projectUser == null) {
@@ -178,7 +178,7 @@ public class ProjectController {
 			for(int i=0; i < request.getId().length; i++){
 		//		System.out.println("Request second"+request.getId()[i]);
 				String value = request.getId()[i];
-				System.out.println("Request second kj"+value);
+//				System.out.println("Request second kj"+value);
 				int id = Integer.parseInt(value);
 				projectUser = projectService.getByProjectAndUserId(request.getProjectId(),id,request.getOrgId());
 				if(projectUser == null) {

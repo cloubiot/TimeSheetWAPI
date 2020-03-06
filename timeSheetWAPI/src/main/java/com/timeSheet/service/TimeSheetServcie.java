@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.timeSheet.dao.ApprovalRepository;
 import com.timeSheet.dao.ReportRepository;
 import com.timeSheet.dao.TimeSheetQuery;
 import com.timeSheet.dao.TimeSheetRepository;
 import com.timeSheet.dao.UserQuery;
 import com.timeSheet.model.timesheet.Activities;
+import com.timeSheet.model.timesheet.Approval;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -37,6 +39,9 @@ public class TimeSheetServcie {
 
 	@Autowired
 	UserQuery userQuery;
+	
+	@Autowired
+	ApprovalRepository approvalRepository;
 	
 	 
 	
@@ -84,6 +89,16 @@ public class TimeSheetServcie {
 	
 	public List<Activities> getActivity(int orgId) {
 		return this.timeSheetQuery.getActivity(orgId);
+		
+	}
+	public Approval saveApproval(Approval approval){
+		return this.approvalRepository.save(approval);
+	}
+	public Approval getByApprovalId(int id){
+		return this.approvalRepository.findByTimesheetId(id);
+	}
+	public List<Report> updateApproval(int orgId) {
+		return this.timeSheetQuery.updateApproval(orgId);
 		
 	}
 }

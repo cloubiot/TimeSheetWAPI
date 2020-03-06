@@ -17,6 +17,9 @@ public class Reportview {
 	String activity;
 	double hrs;
 	String task;
+	int approval;
+	int active;
+	
 	public int getId() {
 		return id;
 	}
@@ -70,6 +73,18 @@ public class Reportview {
 	}
 	public void setTask(String task) {
 		this.task = task;
+	}
+	public int getApproval() {
+		return approval;
+	}
+	public void setApproval(int approval) {
+		this.approval = approval;
+	}
+	public int getActive() {
+		return active;
+	}
+	public void setActive(int active) {
+		this.active = active;
 	}
 	
 	

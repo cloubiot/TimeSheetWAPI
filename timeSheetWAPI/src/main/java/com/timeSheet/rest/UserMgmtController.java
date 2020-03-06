@@ -242,7 +242,7 @@ public class UserMgmtController {
 	public EmailIdExistResponse emailIdExistById(@RequestBody EmailIdExistRequest request){
 		EmailIdExistResponse response = new EmailIdExistResponse();
 		try{
-			System.out.println("checking emailid user "+request.getUserId());
+//			System.out.println("checking emailid user "+request.getUserId());
 			if(request.getUserId() != 0){
 				User user = userMgmtService.emailIdExists(request.getEmailId(),request.getUserId());
 				if(user != null)

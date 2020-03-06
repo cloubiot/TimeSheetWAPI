@@ -34,9 +34,8 @@ public class SecureData {
 
 
 	public static void main(String[] args) throws Exception{
-	
-		System.out.println("Encryped value:");
-		System.out.println("Decryped value:");
+
+
 		 
 	}
 
@@ -46,10 +45,8 @@ public class SecureData {
 		try{
 
 			br = new BufferedReader(new InputStreamReader(System.in));
-			System.out.print("Enter Entry to Encrypt: ");
 			entries[0] = br.readLine();
 			if (entries[0] == null || entries[0].trim().length() == 0) {
-				System.out.println("Error!! You need to supply data to encrypt. Execute Program again.");
 				return null;
 			} else {
 				entries[0] = entries[0].trim() ;                                                                                    

@@ -12,7 +12,6 @@ import com.timeSheet.model.usermgmt.UserSessionProfile;
 public class UuidProfile {
 	
 	public static Cookie setCookie(String cookieName, String cookieValue) {
-		System.out.println("!!!!!!"+cookieValue);
 		Cookie cookie = new Cookie(cookieName, cookieValue);
 	    cookie.setPath("/");
 	    cookie.setMaxAge(60 * 24 * 60 * 60);
@@ -32,7 +31,6 @@ public class UuidProfile {
 	public static void putSessionProfile(String secureToken,HttpServletResponse response,UserSessionProfile userSessionProfile) {
 		Cookie cookie = setCookie("userState",secureToken);
         response.addCookie(cookie);
-        System.out.println("####"+JSONUtil.toJson(cookie));
         CacheService cs = new EhCacheServiceImpl();
         cs.putCache(cookie.getValue(), userSessionProfile);
 //		UuidProfile.putCache(cookie.getValue(), userSessionProfile);

@@ -20,6 +20,7 @@ public class Timesheet {
 	double hrs;
 	Date creationDate;
 	Date updatedDate;
+	int active;
 	
 	public int getId() {
 		return id;
@@ -76,6 +77,12 @@ public class Timesheet {
 	}
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+	public int getActive() {
+		return active;
+	}
+	public void setActive(int active) {
+		this.active = active;
 	}
 	
 }

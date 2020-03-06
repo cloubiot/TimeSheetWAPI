@@ -33,6 +33,7 @@ import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.timesheet.Activities;
+import com.timeSheet.model.timesheet.Approval;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -131,10 +132,16 @@ public class TimeSheetController {
 			timesheet.setTask(request.getTimeSheet()[i].getTask());
 			timesheet.setHrs(request.getTimeSheet()[i].getHrs());
 			timesheet.setUserId(request.getUserId());
+			timesheet.setActive(1);
 			timesheet.setCreationDate(new Date());
 			timesheet.setUpdatedDate(new Date());
 			timeSheetService.saveTimeSheet(timesheet);
-			
+			Approval approval = new Approval();
+			approval.setUserId(request.getUserId());
+			approval.setOrgId(request.getOrgId());
+			approval.setTimesheetId(timesheet.getId());
+			approval.setApproval(0);
+			timeSheetService.saveApproval(approval);
 //			System.out.println("####"+JSONUtil.toJson(timesheet));
 			}
 			else {
@@ -145,6 +152,9 @@ public class TimeSheetController {
 				editTimesheet.setTask(request.getTimeSheet()[i].getTask());
 				editTimesheet.setHrs(request.getTimeSheet()[i].getHrs());
 				editTimesheet.setUserId(request.getUserId());
+				if(editTimesheet.getActive() != 0) {
+				   editTimesheet.setActive(1);
+				}
 				editTimesheet.setUpdatedDate(new Date());
 				timeSheetService.saveTimeSheet(editTimesheet);
 			}
@@ -324,6 +334,62 @@ public class TimeSheetController {
 		}
 		catch(Exception e){
 			logger.error("Time sheet fail",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/updateApproval")
+	public ReportResponse updateApproval(@RequestBody TimeSheetListRequest request,HttpServletRequest servletRequest){
+		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
+		try{
+			if(request.getValue() == 1) {
+				Approval approval = timeSheetService.getByApprovalId(request.getId());
+				approval.setApproval(1);
+				timeSheetService.saveApproval(approval);
+			}else {
+				Timesheet getTimeSheet =  timeSheetService.getById(request.getId());
+				getTimeSheet.setActive(0);
+				timeSheetService.saveTimeSheet(getTimeSheet);
+			}
+			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId());
+			response.setReport(approvalReport);
+			logger.info("Approval Success");
+		}
+		catch(Exception e){
+			logger.error("Update approval failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/approvalList")
+	public ReportResponse approvalList(@RequestBody TimeSheetListRequest request,HttpServletRequest servletRequest){
+		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
+		try{
+			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId());
+			response.setReport(approvalReport);
+			
+			logger.info("ApprovalList Success");
+		}
+		catch(Exception e){
+			logger.error("ApprovalList failed",e);
 			response.setSuccess(false);
 		}
 		return response;

@@ -56,7 +56,6 @@ public class UserQuery {
 	public int getUserRoleId(long userId) {
 		int roleId = 2;
 		String qry = "select role_id from user_role_mapping where user_id=?";
-		System.out.println(qry);
 		try {
 			//roleId = (Integer) jdbcTemplate.queryForObject(qry, new BeanPropertyRowMapper(Integer.class));
 			roleId = jdbcTemplate.queryForObject(
@@ -93,7 +92,6 @@ public class UserQuery {
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
 				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
 				+"where user.ORG_ID ="+id;
-		System.out.println("####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}
@@ -134,7 +132,6 @@ public class UserQuery {
 	}
 	
 	public List<UserDetail> getActiveUser(String value){
-		System.out.println("value "+value);
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
 				+"inner join user_role on user_role.ROLE = user_role_mapping.ROLE_ID where ";

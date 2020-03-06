@@ -40,8 +40,6 @@ public class MyCounterInterceptor implements HandlerInterceptor {
 //		UserSessionProfile output = (element == null ? null : (UserSessionProfile) element.getObjectValue());
         CacheService cs = new EhCacheServiceImpl();
         UserSessionProfile logInFlag = cs.getCache(request);
-        System.out.println("2222222-- :"+JSONUtil.toJson(securedUrl));
-        System.out.println("1111111-- :"+JSONUtil.toJson(logInFlag));
 //		System.out.println("UserSessionProfile: "+JSONUtil.toJson(logInFlag));
         String userSessionProfile = String.valueOf(logInFlag); 
 		if(securedUrl) {

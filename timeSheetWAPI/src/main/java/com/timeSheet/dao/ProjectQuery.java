@@ -105,7 +105,6 @@ public class ProjectQuery {
 			activity = "";
 		}
 		String query = "select * from activities where activity like '%"+activity+"%' and org_id="+orgId+" limit "+from+","+to;
-		System.out.println("@@@@"+query);
 		List<Activities> activities = jdbcTemplate.query(query, new BeanPropertyRowMapper(Activities.class));
 		return activities;
 	}

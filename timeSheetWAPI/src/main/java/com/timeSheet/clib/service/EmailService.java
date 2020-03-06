@@ -93,7 +93,6 @@ public class EmailService {
 	public static void main(String s[]){
 		String emailId ="gomy@gmail.com";
 		String[] user = emailId.split("@");
-		System.out.println(user[0]);
 	}
 }
 

@@ -16,7 +16,6 @@ public class EhCacheServiceImpl implements CacheService{
 	public void putCache(String key,UserSessionProfile value) {
 		CacheManager manager = CacheManager.create();
 		Cache cache = manager.getCache("userProfileCache");
-		System.out.println("^^^^^^"+JSONUtil.toJson(value));
 		cache.put(new Element(key, value));
 	}
 	
