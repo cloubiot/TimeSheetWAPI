@@ -32,8 +32,12 @@ import com.timeSheet.clib.util.UuidProfile;
 import com.timeSheet.model.dbentity.ProjectUserMapping;
 import com.timeSheet.model.dbentity.Projects;
 import com.timeSheet.model.dbentity.User;
+import com.timeSheet.model.project.ActivityPaginationRequest;
+import com.timeSheet.model.project.ActivityPaginationResponse;
 import com.timeSheet.model.timesheet.Activities;
 import com.timeSheet.model.timesheet.Approval;
+import com.timeSheet.model.timesheet.ApprovalPaginationRequest;
+import com.timeSheet.model.timesheet.ApprovalPaginationResponse;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -360,7 +364,7 @@ public class TimeSheetController {
 				getTimeSheet.setActive(0);
 				timeSheetService.saveTimeSheet(getTimeSheet);
 			}
-			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId());
+			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId(),request.getUserId());
 			response.setReport(approvalReport);
 			logger.info("Approval Success");
 		}
@@ -383,7 +387,7 @@ public class TimeSheetController {
 			return response;
 		}
 		try{
-			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId());
+			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId(),request.getUserId());
 			response.setReport(approvalReport);
 			
 			logger.info("ApprovalList Success");
@@ -395,6 +399,65 @@ public class TimeSheetController {
 		return response;
 		
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/getApprovalList")
+	public ReportResponse getApprovalList(@RequestBody TimeSheetListRequest request,HttpServletRequest servletRequest){
+		ReportResponse response = new ReportResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
+		try{
+			List<Report> getApprovval = timeSheetService.getApprovalList(request.getOrgId(),request.getUserId());
+			response.setReport(getApprovval);
+			
+			logger.info("ApprovalList Success");
+		}
+		catch(Exception e){
+			logger.error("ApprovalList failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	@RequestMapping(method = RequestMethod.POST, value = "/secured/approvalPagination")
+	public ApprovalPaginationResponse approvalPagination(@RequestBody ApprovalPaginationRequest request,HttpServletRequest servletRequest){
+		ApprovalPaginationResponse response = new ApprovalPaginationResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getUserId(),request.getOrgId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
+		try{
+			int from=1;
+			int to=10;
+			for(int i=1;i<=request.getValue();i++){
+				if(i==1){
+					from=0;
+					to=10;
+				}
+				else{
+					from+=10;
+					to+=10;
+				}
+			}
+			List<Report> approvalPage = timeSheetService.approvalPagination(from, to,request.getOrgId(),request.getUserId());
+			response.setReport(approvalPage);
+			logger.info("approval Pagination");
+		}
+		catch(Exception e){
+			logger.error("Pagination failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+		
+	}
+	
 
 	private void getActivity(HttpServletRequest request) {
 		Cookie cookie = UuidProfile.getCookie(request, "userState");

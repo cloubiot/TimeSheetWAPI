@@ -14,6 +14,10 @@ public class Approval {
 	int orgId;
 	int timesheetId;
 	int approval;
+	
+	
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -44,6 +48,8 @@ public class Approval {
 	public void setApproval(int approval) {
 		this.approval = approval;
 	}
+	
+	
 	
 	
 }

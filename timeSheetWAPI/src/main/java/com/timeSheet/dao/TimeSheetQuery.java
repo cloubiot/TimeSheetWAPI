@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.model.timesheet.Activities;
+import com.timeSheet.model.timesheet.Approval;
 import com.timeSheet.model.timesheet.HoursResponse;
 import com.timeSheet.model.timesheet.Project;
 import com.timeSheet.model.timesheet.Report;
@@ -119,14 +120,51 @@ public class TimeSheetQuery {
 		List<ReportList> getReportlist = jdbcTemplate.query(query, new BeanPropertyRowMapper(ReportList.class));
 		return getReportlist;
 	}
-	public List<Report> updateApproval(int orgId){
+	public List<Report> updateApproval(int orgId,int userId){
+		String query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,approval.org_id "
+				+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
+				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID)  "
+				+ "inner join approval on approval.timesheet_id = timesheet.ID) ";
+    if(userId == 0) {
+		        query += " where approval.org_id ="+orgId+" and approval = 0 and timesheet.active =1 order by  date";
+	}else {
+		        query += "where approval.org_id ="+orgId+" and timesheet.user_id= "+userId+" and approval = 0 and timesheet.active =1 order by  date";
+	}
+		List<Report> updateApproval = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
+		return updateApproval;
+	}
+	public List<Report> getApprovalList(int orgId,int userId){
+		String query = "select timesheet.id,approval,timesheet.user_id,DATE,PROJECT_NAME,ACTIVITY,HRS,TASK,approval.org_id " 
+				+ "from ((((timesheet inner join approval on approval.id = timesheet.id) "
+				+ "inner join user on user.id = timesheet.user_id) "
+				+ "inner join projects on projects.ID =  timesheet.PROJECT_ID) "
+				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID) " 
+				+ "where approval.org_id ="+orgId+" and timesheet.user_id= "+userId+"  and approval = 0 and timesheet.active = 1 ";	
+		if(userId == 0) {
+			query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,approval.org_id "
+					+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
+					+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID)  "
+					+ "inner join approval on approval.timesheet_id = timesheet.ID) "
+					+ "where approval.org_id ="+orgId+" and approval = 0 and timesheet.active =1 order by  date";
+		}
+		List<Report> getApprovalList = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
+		return getApprovalList;
+	}
+public List<Report> approvalPagination(int from,int to,int orgId,int userId){
+		
 		String query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,approval.org_id "
 				+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
 				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID)  "
 				+ "inner join approval on approval.timesheet_id = timesheet.ID) "
-				+ "where approval.org_id ="+orgId+" and approval = 0 and active =1 order by  date";
-		List<Report> updateApproval = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
-		return updateApproval;
+				+ "where approval.org_id ="+orgId+" and timesheet.user_id= "+userId+" and approval = 0 and timesheet.active =1 order by  date limit "+from+","+to;
+		if(userId == 0) {
+			   query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,approval.org_id "
+					+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
+					+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID)  "
+					+ "inner join approval on approval.timesheet_id = timesheet.ID) "
+					+ "where approval.org_id ="+orgId+" and approval = 0 and timesheet.active =1 order by  date limit "+from+","+to;
+		}
+		List<Report> approvalPagination = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
+		return approvalPagination;
 	}
-	
 }

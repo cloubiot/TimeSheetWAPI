@@ -1,5 +1,7 @@
 package com.timeSheet.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.timeSheet.model.timesheet.Approval;

@@ -97,8 +97,15 @@ public class TimeSheetServcie {
 	public Approval getByApprovalId(int id){
 		return this.approvalRepository.findByTimesheetId(id);
 	}
-	public List<Report> updateApproval(int orgId) {
-		return this.timeSheetQuery.updateApproval(orgId);
+	public List<Report> updateApproval(int orgId,int userId) {
+		return this.timeSheetQuery.updateApproval(orgId,userId);
 		
+	}
+	public List<Report> getApprovalList(int orgId,int userId) {
+		return this.timeSheetQuery.getApprovalList(orgId,userId);
+		
+	}
+	public List<Report> approvalPagination(int  from,int to,int orgId,int userId){
+		return this.timeSheetQuery.approvalPagination(from,to,orgId,userId);
 	}
 }
