@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timeSheet.clib.util.JSONUtil;
+import com.timeSheet.dao.FeedbackRepository;
 import com.timeSheet.dao.OrganizationRepository;
 import com.timeSheet.dao.UserMgmtRepository;
 import com.timeSheet.dao.UserQuery;
@@ -16,6 +17,7 @@ import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRole;
 import com.timeSheet.model.dbentity.UserRoleMapping;
+import com.timeSheet.model.usermgmt.Feedback;
 import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserWithRole;
 
@@ -37,12 +39,16 @@ public class UserMgmtService {
 	@Autowired
 	OrganizationRepository organizationRepository;
 	
+	@Autowired
+	FeedbackRepository feedbackRepository;
 	
 	
 	public User saveUser(User user){
 		return this.userMgmtRepository.save(user);
 	}
-	
+	public Feedback saveFeedback(Feedback feedback) {
+		return this.feedbackRepository.save(feedback);
+	}
 	public List<User> login(String email,String password){
 		return this.userQuery.login(email, password);	
 	}

@@ -43,6 +43,8 @@ import com.timeSheet.model.usermgmt.ChangePasswordRequest;
 import com.timeSheet.model.usermgmt.CookieRequest;
 import com.timeSheet.model.usermgmt.EmailIdExistRequest;
 import com.timeSheet.model.usermgmt.EmailIdExistResponse;
+import com.timeSheet.model.usermgmt.Feedback;
+import com.timeSheet.model.usermgmt.FeedbackRequest;
 import com.timeSheet.model.usermgmt.ForgotPasswordRequest;
 import com.timeSheet.model.usermgmt.ForgotPasswordResponse;
 import com.timeSheet.model.usermgmt.ForgotUsernameRequest;
@@ -754,6 +756,28 @@ public class UserMgmtController {
 		emailService.sendEmail(mail, subject, emailBody);
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, value = "/addFeedback")
+	public SuccessIDResponse addFeedback(@RequestBody FeedbackRequest request) {
+		SuccessIDResponse response = new SuccessIDResponse();
+		try {
+			Feedback feedback = new Feedback();
+			feedback.setEmail(request.getFeedback().getEmail());
+			feedback.setName(request.getFeedback().getName());
+			feedback.setPhoneNumber(request.getFeedback().getPhoneNumber());
+			feedback.setSubject(request.getFeedback().getSubject());
+			feedback.setCompanyName(request.getFeedback().getCompanyName());
+			feedback.setMessage(request.getFeedback().getMessage());
+			feedback.setCreatedDate(new Date());
+			userMgmtService.saveFeedback(feedback);
+			logger.error("feedback success");
+			
+		}catch(Exception e)
+		{
+			logger.error("feedback failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
 	private void getActivity(HttpServletRequest request) {
 		Cookie cookie = UuidProfile.getCookie(request, "userState");
 		if(cookie != null) {
