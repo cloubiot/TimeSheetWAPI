@@ -4,6 +4,8 @@ public class AddCustomerRequest {
 
 	AddCustomer addCustomer;
 	String loginUser;
+	int orgId;
+	int userId;
 	
 	public AddCustomer getAddCustomer() {
 		return addCustomer;
@@ -16,6 +18,18 @@ public class AddCustomerRequest {
 	}
 	public void setLoginUser(String loginUser) {
 		this.loginUser = loginUser;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 	

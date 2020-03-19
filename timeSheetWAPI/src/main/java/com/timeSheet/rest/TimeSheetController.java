@@ -355,6 +355,18 @@ public class TimeSheetController {
 			return response;
 		}
 		try{
+			int from=1;
+			int to=10;
+			for(int i=1;i<=request.getPage();i++){
+				if(i==1){
+					from=0;
+					to=10;
+				}
+				else{
+					from+=10;
+					to+=10;
+				}
+			}
 			if(request.getValue() == 1) {
 				Approval approval = timeSheetService.getByApprovalId(request.getId());
 				approval.setApproval(1);
@@ -364,7 +376,7 @@ public class TimeSheetController {
 				getTimeSheet.setActive(0);
 				timeSheetService.saveTimeSheet(getTimeSheet);
 			}
-			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId(),request.getUserId());
+			List<Report> approvalReport = timeSheetService.updateApproval(from,to,request.getOrgId(),request.getUserId());
 			response.setReport(approvalReport);
 			logger.info("Approval Success");
 		}
@@ -387,7 +399,9 @@ public class TimeSheetController {
 			return response;
 		}
 		try{
-			List<Report> approvalReport = timeSheetService.updateApproval(request.getOrgId(),request.getUserId());
+			int from  =0;
+			int to = 10;
+			List<Report> approvalReport = timeSheetService.updateApproval(from,to,request.getOrgId(),request.getUserId());
 			response.setReport(approvalReport);
 			
 			logger.info("ApprovalList Success");

@@ -12,6 +12,7 @@ public class UserSignupRequest {
 	int role;
 	String active;
 	int orgId;
+	int groupId;
 	
 	public int getId() {
 		return id;
@@ -73,5 +74,12 @@ public class UserSignupRequest {
 	public void setOrgId(int orgId) {
 		this.orgId = orgId;
 	}
+	public int getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
+	
 	
 }

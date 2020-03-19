@@ -16,14 +16,14 @@
 TicketNumber: <b>$number</b>.<br>
 TicketTitle :<b>$title</b><br>
 Action Notes:<b>$notes</b><br>
-Login to <a href="https://www.dcsolar.cloubiot.com">DCSolar</a> for further Details.
+Login to <a href="https://www.timesheet.cloubiot.com">TimeSheet</a> for further Details.
 </p>
 
 <b>Regards,</b><br>
 <b>$regards</b>
 </div>
 <hr>
-<footer style="padding:10px" align="center">&copy; 2017 DCSolar</footer>
+<footer style="padding:10px" align="center">&copy; 2020 TimeSheet</footer>
 </div>
 </body>
 </html>

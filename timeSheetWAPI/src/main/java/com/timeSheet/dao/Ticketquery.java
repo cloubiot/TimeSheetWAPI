@@ -1,0 +1,87 @@
+package com.timeSheet.dao;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.timeSheet.clib.util.JSONUtil;
+import com.timeSheet.model.dbentity.TroubleActivity;
+import com.timeSheet.model.dbentity.TroubleTicket;
+import com.timeSheet.model.dbentity.User;
+import com.timeSheet.model.ticket.ActivityResponse;
+import com.timeSheet.model.ticket.TroubleDate;
+import com.timeSheet.model.ticket.TroubleTicketDetail;
+
+@Service
+@Transactional
+
+public class Ticketquery {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
+	public List<TroubleTicket> getAllTicket(){
+		String query = "select * from trouble_ticket";
+		List<TroubleTicket> ticket = jdbcTemplate.query(query, new BeanPropertyRowMapper(TroubleTicket.class));
+		return ticket;
+	}
+	
+	public List<TroubleTicketDetail> getTicketDetail(int assignTo,int roleId,User user){
+		String query;
+		if(assignTo !=0) {
+		 query = "select trouble_ticket.*,assigned_groups.name,status.status,user.first_name,DATE_FORMAT(trouble_ticket.SLA_TIME, '%m/%d/%Y %H:%i:%s') AS SLA_DATE from trouble_ticket "
+				+" inner join status on status.id = trouble_ticket.status_Id "
+				+" inner join user on user.id = trouble_ticket.assigned_to"
+				+" inner join assigned_groups on  assigned_groups.id = trouble_ticket.group_id ";
+		}else {
+			 query = "select trouble_ticket.*,assigned_groups.name,status.status,DATE_FORMAT(trouble_ticket.SLA_TIME, '%m/%d/%Y %H:%i:%s') AS SLA_DATE from trouble_ticket "
+			        + " inner join status on status.id = trouble_ticket.status_Id "
+			        + " inner join assigned_groups on  assigned_groups.id = trouble_ticket.group_id";
+		}
+//		if(roleId == 3){
+//			query+=" and trouble_ticket.assigned_to="+user.getId();
+//		}
+		if(roleId == 5){
+			query +=" and trouble_ticket.contact_name ='"+user.getEmail()+"'";
+		}
+			query +="  order by id DESC";
+		List<TroubleTicketDetail> ticketDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(TroubleTicketDetail.class));
+		return ticketDetail;
+	}
+	public List<ActivityResponse> getActivity(int id){
+		String query = "select user.email,user.PHONE_NUMBER,trouble_activity.* from trouble_activity "
+				+ " inner join user on user.id = trouble_activity.ISSUE_ID  "
+				+ "where trouble_activity.ISSUE_ID ="+id+" order by id desc";
+		List<ActivityResponse> activity = jdbcTemplate.query(query, new  BeanPropertyRowMapper(ActivityResponse.class));
+		return activity;
+	}
+	public TroubleTicketDetail getTicketDetailById(int id){
+		String query = "select trouble_ticket.*,assigned_groups.name,status.status,user.first_name,user.phone_number from trouble_ticket "
+				+"inner join status on status.id = trouble_ticket.status_Id "
+				+"inner join assigned_groups on assigned_groups.id = trouble_ticket.group_id "
+				+"inner join user on user.id = trouble_ticket.assigned_to where trouble_ticket.id="+id;
+		TroubleTicketDetail ticketDetail = (TroubleTicketDetail) jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper(TroubleTicketDetail.class));
+		return ticketDetail;
+	}
+	
+	public TroubleDate getById(int id){
+		String query = "SELECT id,"
+				+" DATE_FORMAT(trouble_ticket.OPENED_DATE, '%m/%d/%Y %H:%i:%s') AS OPENED_DATE,"
+				+" DATE_FORMAT(trouble_ticket.DELIVERY_DATE, '%m/%d/%Y %H:%i:%s') AS DELIVERY_DATE,"
+				+" DATE_FORMAT(trouble_ticket.SLA_TIME, '%m/%d/%Y %H:%i:%s') AS SLA_TIME,"
+				+" DATE_FORMAT(trouble_ticket.COMPLETED_TIME, '%m/%d/%Y %H:%i:%s') AS COMPLETED_TIME,"
+				+" DATE_FORMAT(trouble_ticket.CLOSED_TIME, '%m/%d/%Y %H:%i:%s') AS CLOSED_TIME,"
+				+" DATE_FORMAT(trouble_ticket.LAST_UPDATED, '%m/%d/%Y %H:%i:%s') AS LAST_UPDATED"
+				+" from trouble_ticket "
+				+" where trouble_ticket.id="+id;
+     TroubleDate trouble = (TroubleDate)jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper(TroubleDate.class));
+   return trouble;
+}
+	
+	
+
+}

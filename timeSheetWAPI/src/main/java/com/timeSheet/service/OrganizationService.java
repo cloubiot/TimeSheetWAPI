@@ -24,6 +24,9 @@ public class OrganizationService {
 	public Organization saveOrg(Organization organization){
 		return this.organizationRepository.save(organization);
 	}
+	public Organization getById(int orgId) {
+		return this.organizationRepository.findById(orgId);
+	}
 	public List<OrganizationDetails> getOrganization(){
 		return this.organizationQuery.getOrganization();
 	}

@@ -120,7 +120,7 @@ public class TimeSheetQuery {
 		List<ReportList> getReportlist = jdbcTemplate.query(query, new BeanPropertyRowMapper(ReportList.class));
 		return getReportlist;
 	}
-	public List<Report> updateApproval(int orgId,int userId){
+	public List<Report> updateApproval(int from,int to,int orgId,int userId){
 		String query = "select timesheet.USER_ID,timesheet.ID,DATE,PROJECT_ID,PROJECT_NAME,ACTIVITY,ACTIVITY_ID,HRS,TASK,approval.approval,approval.org_id "
 				+ "from (((timesheet inner join projects on projects.ID =  timesheet.PROJECT_ID) "
 				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID)  "
@@ -130,13 +130,13 @@ public class TimeSheetQuery {
 	}else {
 		        query += "where approval.org_id ="+orgId+" and timesheet.user_id= "+userId+" and approval = 0 and timesheet.active =1 order by  date";
 	}
+                query += " limit "+from+","+to;
 		List<Report> updateApproval = jdbcTemplate.query(query, new BeanPropertyRowMapper(Report.class));
 		return updateApproval;
 	}
 	public List<Report> getApprovalList(int orgId,int userId){
 		String query = "select timesheet.id,approval,timesheet.user_id,DATE,PROJECT_NAME,ACTIVITY,HRS,TASK,approval.org_id " 
-				+ "from ((((timesheet inner join approval on approval.id = timesheet.id) "
-				+ "inner join user on user.id = timesheet.user_id) "
+				+ "from (((timesheet inner join approval on approval.timesheet_id = timesheet.ID) "
 				+ "inner join projects on projects.ID =  timesheet.PROJECT_ID) "
 				+ "inner join activities on activities.ID = timesheet.ACTIVITY_ID) " 
 				+ "where approval.org_id ="+orgId+" and timesheet.user_id= "+userId+"  and approval = 0 and timesheet.active = 1 ";	

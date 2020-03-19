@@ -1,13 +1,18 @@
-package com.timeSheet.model.usermgmt;
+package com.timeSheet.model.group;
 
 import com.timeSheet.model.dbentity.User;
 
-public class UserDetail extends User{
-
+public class MemberListInGroup extends User{
+	
+	int groupId;
 	int roleId;
 	String desc;
-	int groupId;
-	
+	public int getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
 	public int getRoleId() {
 		return roleId;
 	}
@@ -20,12 +25,7 @@ public class UserDetail extends User{
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	public int getGroupId() {
-		return groupId;
-	}
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
-	}
+	
 	
 	
 }

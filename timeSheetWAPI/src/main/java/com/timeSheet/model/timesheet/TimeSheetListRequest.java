@@ -11,6 +11,7 @@ public class TimeSheetListRequest {
     Date date_1;
     int orgId;
     int id;
+    int page;
     
 	
 public int getUserId() {
@@ -67,6 +68,14 @@ public int getUserId() {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
 	}
 
 

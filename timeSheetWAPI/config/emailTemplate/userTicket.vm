@@ -5,7 +5,7 @@
 
 <div class="container">
 <h1 style="margin-top:5px; margin-bottom:5px">
-<img style="width:30%" src="http://dcsolar.cloubiot.com/app/img/dcSolar.png" alt="DCSolar" /></h1>
+//<img style="width:30%" src="http://dcsolar.cloubiot.com/app/img/dcSolar.png" alt="DCSolar" /></h1>
 </div>
 </header>
 <hr>
@@ -15,14 +15,14 @@
 <p style="line-height:2">Trouble Ticket $number has been opened for you.<br>
 TicketTitle :<b>$title</b><br>
 
-Login to <a href="https://www.dcsolar.cloubiot.com">DCSolar</a> for further details.
+Login to <a href="https://www.timesheet.cloubiot.com">Timesheet</a> for further details.
 </p>
 
 <b>Regards,</b><br>
 <b>$regards</b>
 </div>
 <hr>
-<footer style="padding:10px" align="center">&copy; 2017 DCSolar</footer>
+<footer style="padding:10px" align="center">&copy; 2020 TimeSheet</footer>
 </div>
 </body>
 </html>

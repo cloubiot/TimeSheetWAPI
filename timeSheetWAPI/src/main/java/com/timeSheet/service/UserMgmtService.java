@@ -8,11 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.dao.FeedbackRepository;
+import com.timeSheet.dao.GroupMappingRepository;
 import com.timeSheet.dao.OrganizationRepository;
 import com.timeSheet.dao.UserMgmtRepository;
 import com.timeSheet.dao.UserQuery;
 import com.timeSheet.dao.UserRoleMappingRepository;
 import com.timeSheet.dao.UserRoleRepository;
+import com.timeSheet.model.dbentity.GroupMapping;
 import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRole;
@@ -41,6 +43,9 @@ public class UserMgmtService {
 	
 	@Autowired
 	FeedbackRepository feedbackRepository;
+	
+	@Autowired
+	GroupMappingRepository groupMappingRepository;
 	
 	
 	public User saveUser(User user){
@@ -82,6 +87,10 @@ public class UserMgmtService {
 	public User getUserById(int id){
 		return this.userMgmtRepository.findById(id);
 	}
+	public GroupMapping getGroupId(int userId){
+		return this.groupMappingRepository.findByUserId(userId);
+	}
+	
 	
 	public List<UserWithRole> getUserList(int projectId,int orgId){
 		return this.userQuery.getUserList(projectId,orgId);

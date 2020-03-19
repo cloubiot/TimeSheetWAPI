@@ -14,6 +14,7 @@ import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.usermgmt.UserDetail;
 import com.timeSheet.model.usermgmt.UserWithRole;
+import com.timeSheet.model.dbentity.GroupMapping;
 import com.timeSheet.model.dbentity.Organization;
 
 
@@ -79,22 +80,27 @@ public class UserQuery {
 	}
 	
 	
+	
 	public List<UserWithRole> searchUser(String name,int roleId){
 		String query = "select user_role_mapping.ROLE_ID, user.* from user " 
 						+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id " 
 						+"where email like '%"+name+"%' and user_role_mapping.role_id="+roleId;
+//		System.out.println("@@@@@@"+query);
 		List<UserWithRole> users = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserWithRole.class));
 		return users;
 	}
 	
 	public List<UserDetail> getUserDetail(int id){
-		String query = "select user_role.desc,user_role_mapping.ROLE_ID, user.* from user " 
+		String query = "select user_role.desc,user_role_mapping.ROLE_ID,group_mapping.GROUP_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
 				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
+				+"inner join group_mapping on user.id = group_mapping.USER_ID "
 				+"where user.ORG_ID ="+id;
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}
+	
+	
 	
 	public List<UserDetail> getPaginationForUser(int from, int to,String email,String name,int orgId){
 		if(name == null)
@@ -106,7 +112,6 @@ public class UserQuery {
 				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
 				+"where FIRST_NAME like '%"+name+"%' and EMAIL like '%"+email+"%' and user.org_id="+orgId;
 		query+=" limit "+from+" ,"+to;
-//		System.out.println("#####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}
@@ -127,6 +132,7 @@ public class UserQuery {
 				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
 				+"where user.first_name like '%"+name+"%'"
 				+" and user.email like '%"+mailId+"%' and user.org_id ="+orgId;
+//		System.out.println("#####"+query);
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
 		return userDetail;
 	}

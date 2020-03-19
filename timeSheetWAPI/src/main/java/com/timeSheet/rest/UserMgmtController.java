@@ -32,6 +32,7 @@ import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.clib.util.RandomPassword;
 import com.timeSheet.clib.util.SecureData;
 import com.timeSheet.clib.util.UuidProfile;
+import com.timeSheet.model.dbentity.GroupMapping;
 import com.timeSheet.model.dbentity.Organization;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.dbentity.UserRole;
@@ -68,6 +69,8 @@ import com.timeSheet.model.usermgmt.UserProjectRequest;
 import com.timeSheet.model.usermgmt.UserSessionProfile;
 import com.timeSheet.model.usermgmt.UserSignupRequest;
 import com.timeSheet.model.usermgmt.UserWithRole;
+import com.timeSheet.service.GroupService;
+import com.timeSheet.service.OrganizationService;
 import com.timeSheet.service.UserMgmtService;
 
 @RestController
@@ -83,6 +86,12 @@ public class UserMgmtController {
 	private EmailService emailService;
 	@Autowired
 	private EmailTemplateService emailTemplateService;
+	
+	@Autowired
+	private OrganizationService organizationService;
+	
+	@Autowired
+	private GroupService groupService;
 	
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/secured/registerUser")
@@ -127,6 +136,14 @@ public class UserMgmtController {
 			user.setId(request.getId());
 			user.setOrgId(request.getOrgId());
 			userMgmtService.saveUser(user);
+			GroupMapping mapping = groupService.getByUserId(user.getId());
+			if(mapping == null) {
+				 mapping = new GroupMapping();
+			}
+			mapping.setGroupId(request.getGroupId());
+			mapping.setUserId(user.getId());
+			mapping.setOrgId(request.getOrgId());
+			groupService.saveGroupMapping(mapping);	
 			roleMapping = userMgmtService.getRoleByUserId(user.getId());
 			if(roleMapping == null){
 				roleMapping = new UserRoleMapping();
@@ -514,6 +531,63 @@ public class UserMgmtController {
 		}
 		return response;
 	}
+	@RequestMapping(method = RequestMethod.POST, value="/secured/addUserCustomer")
+	public SuccessIDResponse addCustomer(@RequestBody AddCustomerRequest request,HttpServletRequest servletRequest){
+		SuccessIDResponse response = new SuccessIDResponse();
+		getActivity(servletRequest);
+		if(!AuthUtil.isOrgAuthorized(response,request.getOrgId(),request.getOrgId(),servletRequest)) {
+			if(!AuthUtil.isAuthorized(response,request.getUserId(),servletRequest)) {
+				return response;
+			}
+			return response;
+		}
+		try{
+			GroupMapping group = new GroupMapping();
+			UserRoleMapping userRoleMapping = new UserRoleMapping();
+			RandomPassword randomString = new RandomPassword();
+			String password = randomString.generateRandomString(); 
+			SecureData sd = new SecureData();
+			String encrypt = sd.encrypt(password);
+			User user = new User();
+			user.setFirstName(request.getAddCustomer().getFirstName());
+			user.setLastName(request.getAddCustomer().getLastName());
+			user.setUserName(request.getAddCustomer().getFirstName());
+			user.setPassword(encrypt);
+			user.setActive("true");
+			user.setOrgId(request.getOrgId());
+			user.setEmail(request.getAddCustomer().getEmail());
+			user.setPhoneNumber(request.getAddCustomer().getPhoneNumber());
+			userMgmtService.saveUser(user);
+			userRoleMapping.setRoleId(5);
+			userRoleMapping.setUserId(user.getId());
+			userRoleMapping.setOrgId(request.getOrgId());
+			userMgmtService.saveUserRole(userRoleMapping);
+			group.setGroupId(0);
+			group.setOrgId(request.getOrgId());;
+			group.setUserId(user.getId());
+			groupService.saveGroupMapping(group);
+			Organization org = organizationService.getById(request.getOrgId());
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("firstName", user.getFirstName());
+			map.put("userName", user.getEmail());
+			map.put("password", password );
+			map.put("orgName", org.getName());
+			map.put("regards", request.getLoginUser());
+			String subject = "Welcome to DCSolar";
+			String emailBody = emailTemplateService.getEmailTemplate("register.vm",map);
+			EmailMessage emailMessage = new EmailMessage();
+			emailMessage.setToEmail(user.getEmail());
+			emailMessage.setSubject(subject);
+			emailMessage.setEmailBody(emailBody);
+			emailService.sendEmail(user.getEmail(), subject, emailBody);
+			logger.info("address and user added");
+		}
+		catch(Exception e){
+			logger.error("UserCustomer failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
 	
 	
 	@RequestMapping(method = RequestMethod.POST, value="/secured/getUser")
@@ -527,10 +601,12 @@ public class UserMgmtController {
 			return response;
 		}
 		try{
-			User user = userMgmtService.getUserById(request.getUserId());
-			response.setUser(user);
+			User userDetail = userMgmtService.getUserById(request.getUserId());
+			response.setUser(userDetail);
+			GroupMapping group = userMgmtService.getGroupId(request.getUserId());
+			response.setGroupId(group.getGroupId());
 			UserRoleMapping userRole = userMgmtService.getRoleByUserId(request.getUserId());
-//			System.out.println(" "+JSONUtil.toJson(userRole));
+			System.out.println(" "+JSONUtil.toJson(userRole));
 			response.setRoleId(userRole.getRoleId());
 			logger.info("Get full detail for user");
 		}
@@ -631,7 +707,7 @@ public class UserMgmtController {
 			map.put("firstName", user.getFirstName());
 			map.put("userName", user.getEmail());
 			map.put("password", password );
-			String subject = "Your Password for DCSolar";
+			String subject = "Your Password for Timesheet";
 			String emailBody = emailTemplateService.getEmailTemplate("generatePassword.vm",map);
 			EmailMessage emailMessage = new EmailMessage();
 			emailMessage.setToEmail(user.getEmail());
@@ -769,6 +845,18 @@ public class UserMgmtController {
 			feedback.setMessage(request.getFeedback().getMessage());
 			feedback.setCreatedDate(new Date());
 			userMgmtService.saveFeedback(feedback);
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("name", feedback.getName());
+			map.put("email", feedback.getEmail());
+			map.put("phone", feedback.getPhoneNumber());
+			map.put("email", feedback.getMessage());
+			String subject = "Timesheet Feedback Request";
+			String emailBody = emailTemplateService.getEmailTemplate("feedbackForm.vm",map);
+			EmailMessage emailMessage = new EmailMessage();
+			emailMessage.setToEmail("anishcloubiot@gmail.com");
+			emailMessage.setSubject(subject);
+			emailMessage.setEmailBody(emailBody);
+			emailService.sendEmail(emailMessage.getToEmail(), subject, emailBody);
 			logger.error("feedback success");
 			
 		}catch(Exception e)
