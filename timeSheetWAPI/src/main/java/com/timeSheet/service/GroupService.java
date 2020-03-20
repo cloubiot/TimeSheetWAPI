@@ -40,6 +40,9 @@ public class GroupService {
 	public List<AssignedGroups> getActiveGroups(){
 		return this.groupQuery.getActiveGroups();
 	}	
+	public List<AssignedGroups> groupPagination(int  from,int to,int orgId,String name){
+		return this.groupQuery.groupPagination(from, to,name,orgId);
+		}
 	
 	public AssignedGroups getById(int id){
 		return this.assignedRepository.findById(id);

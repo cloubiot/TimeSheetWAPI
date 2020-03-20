@@ -12,7 +12,7 @@ public class AssignedGroups {
 	@GeneratedValue
 	int id;
 	String name;
-	String groupOwner;
+	int groupOwner;
 	String groupEmail;
 	String description;
 	String active;
@@ -32,10 +32,10 @@ public class AssignedGroups {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getGroupOwner() {
+	public int getGroupOwner() {
 		return groupOwner;
 	}
-	public void setGroupOwner(String groupOwner) {
+	public void setGroupOwner(int groupOwner) {
 		this.groupOwner = groupOwner;
 	}
 	public String getGroupEmail() {

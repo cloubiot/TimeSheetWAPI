@@ -68,6 +68,8 @@ import com.timeSheet.model.usermgmt.UserProfile;
 import com.timeSheet.model.usermgmt.UserProjectRequest;
 import com.timeSheet.model.usermgmt.UserSessionProfile;
 import com.timeSheet.model.usermgmt.UserSignupRequest;
+import com.timeSheet.model.usermgmt.UserTicketProject;
+import com.timeSheet.model.usermgmt.UserTicketResponse;
 import com.timeSheet.model.usermgmt.UserWithRole;
 import com.timeSheet.service.GroupService;
 import com.timeSheet.service.OrganizationService;
@@ -691,6 +693,21 @@ public class UserMgmtController {
 		return response;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/getUserById/{id}")
+	public UserTicketResponse getUserById(@PathVariable int id){
+		UserTicketResponse response = new UserTicketResponse();
+		try{
+			List<UserTicketProject> userDetail = userMgmtService.getUserTicket(id);
+			response.setUserTicketProject(userDetail);;
+			logger.info("Get User Project Success");
+		}
+		catch(Exception e){
+			logger.error("Get User Project failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
 	
 	@RequestMapping(method = RequestMethod.GET, value="generatePassword/{id}")
 	public SuccessIDResponse generatePassword(@PathVariable int id){
@@ -849,7 +866,7 @@ public class UserMgmtController {
 			map.put("name", feedback.getName());
 			map.put("email", feedback.getEmail());
 			map.put("phone", feedback.getPhoneNumber());
-			map.put("email", feedback.getMessage());
+			map.put("messsage", feedback.getMessage());
 			String subject = "Timesheet Feedback Request";
 			String emailBody = emailTemplateService.getEmailTemplate("feedbackForm.vm",map);
 			EmailMessage emailMessage = new EmailMessage();

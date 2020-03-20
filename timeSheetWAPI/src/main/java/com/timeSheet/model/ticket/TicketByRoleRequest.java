@@ -6,6 +6,7 @@ public class TicketByRoleRequest {
 
 	int roleId;
 	User user;
+	int orgId;
 	
 	public int getRoleId() {
 		return roleId;
@@ -18,6 +19,12 @@ public class TicketByRoleRequest {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

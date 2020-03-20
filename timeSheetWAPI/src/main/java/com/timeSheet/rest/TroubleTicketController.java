@@ -22,6 +22,7 @@ import com.timeSheet.clib.service.EmailTemplateService;
 import com.timeSheet.clib.util.DateTimeUtil;
 import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.model.dbentity.ParentChildMapping;
+import com.timeSheet.model.dbentity.Status;
 import com.timeSheet.model.dbentity.TroubleActivity;
 import com.timeSheet.model.dbentity.TroubleTicket;
 import com.timeSheet.model.dbentity.User;
@@ -29,8 +30,10 @@ import com.timeSheet.model.email.EmailMessage;
 import com.timeSheet.model.group.MemberListInGroup;
 import com.timeSheet.model.ticket.ActivityResponse;
 import com.timeSheet.model.ticket.GetActivityResponse;
+import com.timeSheet.model.ticket.StatusResponse;
 import com.timeSheet.model.ticket.TicketByRoleRequest;
 import com.timeSheet.model.ticket.TicketDetailResponse;
+import com.timeSheet.model.ticket.TicketPaginationRequest;
 import com.timeSheet.model.ticket.TicketRequest;
 import com.timeSheet.model.ticket.TicketResponse;
 import com.timeSheet.model.ticket.TroubleDate;
@@ -86,15 +89,20 @@ public class TroubleTicketController {
 				ticket.setVin(request.getTroubleTicket().getVin());
 				ticket.setContactName(request.getTroubleTicket().getContactName());
 				ticket.setBillable(request.getTroubleTicket().getBillable());
+				ticket.setOrgId(request.getOrgId());
 				ticket.setBillingAddress(request.getTroubleTicket().getBillingAddress());
 				ticket.setDescription(request.getTroubleTicket().getDescription());
 				ticket.setTicketReason(request.getTroubleTicket().getTicketReason());
 				ticket.setAssignedTo(request.getTroubleTicket().getAssignedTo());
+				ticket.setLastUpdated(new Date());
+				ticket.setLastUpdatedBy(request.getTroubleActivity().getLastModUser());
 				ticket.setGroupId(request.getTroubleTicket().getGroupId());
 				ticket.setSlaTime(DateUtils.addHours(mydate,3));
 				ticket.setInformationDetail(request.getTroubleTicket().getInformationDetail());
 				ticket.setOpenedBy(request.getTroubleTicket().getOpenedBy());
 				ticket.setOpenedDate(new Date());
+				ticket.setPriorityId(request.getTroubleTicket().getPriorityId());
+				ticket.setTicketType(request.getTroubleTicket().getTicketType());
 				ticket.setRequestOrder(request.getTroubleTicket().getRequestOrder());
 				//System.out.println("Dateee    "+DateTimeUtil.stringToDate(request.getTroubleTicket().getDeliveryDate()));
 				
@@ -155,6 +163,9 @@ public class TroubleTicketController {
 			ticket.setTicketReason(request.getTroubleTicket().getTicketReason());
 			ticket.setAssignedTo(request.getTroubleTicket().getAssignedTo());
 			ticket.setGroupId(request.getTroubleTicket().getGroupId());
+			ticket.setOrgId(request.getOrgId());
+			ticket.setPriorityId(request.getTroubleTicket().getPriorityId());
+			ticket.setTicketType(request.getTroubleTicket().getTicketType());
 			if(request.getTroubleTicket().getStatusId() == 9){
 				ticket.setClosedTime(new Date());
 				ticket.setClosedBy(request.getTroubleTicket().getOpenedBy());
@@ -171,7 +182,7 @@ public class TroubleTicketController {
 			ticket.setProjectId(request.getTroubleTicket().getProjectId());
 			ticket.setTaxRate(request.getTroubleTicket().getTaxRate());
 			ticket.setLastUpdated(new Date());
-			ticket.setLastUpdatedBy(request.getTroubleTicket().getOpenedBy());
+			ticket.setLastUpdatedBy(request.getTroubleActivity().getLastModUser());
 			ticket.setResolutionCode(request.getTroubleTicket().getResolutionCode());
 			ticket.setRequestOrder(request.getTroubleTicket().getRequestOrder());
 			troubleTicketService.saveTicket(ticket);
@@ -236,8 +247,7 @@ public class TroubleTicketController {
 		try{
 			List<TroubleTicket> ticket = troubleTicketService.getAllTicket();
 			for(TroubleTicket  tickets : ticket) {
-			List<TroubleTicketDetail> ticketDetail = troubleTicketService.getTicketDetail(tickets.getAssignedTo(),request.getRoleId(),request.getUser());
-			System.out.println(JSONUtil.toJson(ticketDetail));
+			List<TroubleTicketDetail> ticketDetail = troubleTicketService.getTicketDetail(request.getOrgId(),request.getRoleId(),request.getUser());
 			response.setTicketDetail(ticketDetail);
 			}
 			response.setCurrentDateTime(new Date());
@@ -285,6 +295,49 @@ public class TroubleTicketController {
 		return response;
 	
 }
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/getStatus")
+	public StatusResponse getStatus(){
+		StatusResponse response = new StatusResponse();
+		try{
+			List<Status> status = troubleTicketService.getStatus();
+			response.setGetStatus(status);;
+			logger.info("status got");
+		}
+		catch(Exception e){
+			logger.error("status failed",e);
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/getTicketByPagination")
+	public SuccessIDResponse getTicketByPagination(@RequestBody TicketPaginationRequest request){
+	SuccessIDResponse response = new SuccessIDResponse();
+			try{
+			  int from=1;
+			  int to=10;
+			for(int i=1;i<=request.getValue();i++){
+			   if(i==1){
+			      from=0;
+			       to=10;
+			    }
+			    else{
+			       from+=10;
+			         to+=10;
+			       }
+			}
+		List<TroubleTicket> ticketPage = troubleTicketService.getTicketByPagination(from, to,request.getOrgId(),request.getTicketNumber(),request.getContactName());
+	 response.setTicket(ticketPage);
+	logger.info("Ticket Pagination");
+	}
+	catch(Exception e){
+	logger.error("Pagination failed",e);
+	response.setSuccess(false);
+	}
+	return response;
+
+	}
 	
 	public void sendEmail(String mail,String subject,String emailBody) {
 		EmailMessage emailMessage = new EmailMessage();

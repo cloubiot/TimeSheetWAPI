@@ -17,6 +17,7 @@ import com.timeSheet.clib.util.JSONUtil;
 import com.timeSheet.model.dbentity.AssignedGroups;
 import com.timeSheet.model.group.AddGroupRequest;
 import com.timeSheet.model.group.AssignGroupResponse;
+import com.timeSheet.model.group.GroupsPaginationRequest;
 import com.timeSheet.model.group.GroupsResponse;
 import com.timeSheet.model.group.MemberListInGroup;
 import com.timeSheet.model.group.MemberResponse;
@@ -187,6 +188,34 @@ public class GroupController {
 			response.setSuccess(false);
 		}
 		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/groupPagination")
+	public GroupsResponse groupPagination(@RequestBody GroupsPaginationRequest request){
+	GroupsResponse response = new GroupsResponse();
+	try{
+	           int from=1;
+	           int to=10;
+	      for(int i=1;i<=request.getValue();i++){
+	           if(i==1){
+	                  from=0;
+	                     to=10;
+	                    }
+	       else{
+	         from+=10;
+	         to+=10;
+	            }
+	}
+	List<AssignedGroups> groupPage = groupService.groupPagination(from, to,request.getOrgId(),request.getName());
+	response.setGroups(groupPage);
+	logger.info("Group Pagination");
+	}
+	catch(Exception e){
+	logger.error("Pagination failed",e);
+	response.setSuccess(false);
+	}
+	return response;
+
 	}
 	
 }

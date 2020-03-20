@@ -42,7 +42,7 @@ public class TroubleTicket {
 	@JsonFormat(pattern="dd-MM-yyyy hh:mm a")
 	Date closedTime;
 	String closedBy;
-	String lastUpdatedBy;
+	int lastUpdatedBy;
 	@JsonFormat(pattern="dd-MM-yyyy hh:mm a")
 	Date lastUpdated;
 	int slaFlag;
@@ -50,6 +50,9 @@ public class TroubleTicket {
 	String requestOrder;
 	int childTicket;
 	String parentTicket;
+	int priorityId;
+	int TicketType;
+	int orgId;
 	
 	public int getId() {
 		return id;
@@ -198,10 +201,10 @@ public class TroubleTicket {
 	public void setClosedBy(String closedBy) {
 		this.closedBy = closedBy;
 	}
-	public String getLastUpdatedBy() {
+	public int getLastUpdatedBy() {
 		return lastUpdatedBy;
 	}
-	public void setLastUpdatedBy(String lastUpdatedBy) {
+	public void setLastUpdatedBy(int lastUpdatedBy) {
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
 	public Date getLastUpdated() {
@@ -240,6 +243,25 @@ public class TroubleTicket {
 	public void setParentTicket(String parentTicket) {
 		this.parentTicket = parentTicket;
 	}
+	public int getPriorityId() {
+		return priorityId;
+	}
+	public void setPriorityId(int priorityId) {
+		this.priorityId = priorityId;
+	}
+	public int getTicketType() {
+		return TicketType;
+	}
+	public void setTicketType(int ticketType) {
+		TicketType = ticketType;
+	}
+	public int getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
+	}
+	
 	
 	
 }

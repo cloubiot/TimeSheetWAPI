@@ -26,8 +26,8 @@ public class GroupQuery {
 		return groups;
 	}
 	public List<TotalGroups> getAllGroups(int orgId){
-		String query = "select assigned_groups.*,user.first_name from assigned_groups "
-						+"inner join user on user.id = assigned_groups.group_owner where assigned_groups.org_id ="+orgId; 
+		 String query = "select assigned_groups.*,user.first_name from assigned_groups "
+						+"left join user on user.id = assigned_groups.group_owner where assigned_groups.org_id ="+orgId; 
 		List<TotalGroups> groups = jdbcTemplate.query(query, new BeanPropertyRowMapper(TotalGroups.class));
 		System.out.println("grooups    o"+JSONUtil.toJson(query));
 		return groups;
@@ -41,6 +41,19 @@ public class GroupQuery {
 		List<MemberListInGroup> group = jdbcTemplate.query(query, new BeanPropertyRowMapper(MemberListInGroup.class));
 		return group;
 	}
+	
+	public List<AssignedGroups>  groupPagination(int from, int to,String name,int orgId){
+		if(name == null)
+		name ="";
+		String query = "select assigned_groups.*,user.first_name from assigned_groups "
+		+" left join user on user.id = assigned_groups.group_owner where assigned_groups.org_id ="+orgId+" and assigned_groups.name like '%"+name+"%' ";
+		query+=" limit "+from+" ,"+to;
+		System.out.println("grooups    o"+JSONUtil.toJson(query));
+		List<AssignedGroups> groupPagination = jdbcTemplate.query(query, new BeanPropertyRowMapper(AssignedGroups.class));
+		return groupPagination;
+		}
+
+
 	public List<MemberListInGroup> primaryMembers(int groupId,int value){
 		String query = "select group_mapping.group_Id,user.*,user_role_mapping.role_Id,user_role.desc from group_mapping "
 				+" inner join user on user.id = group_mapping.user_id "

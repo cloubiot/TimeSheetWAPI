@@ -14,6 +14,7 @@ public class TroubleDate {
 	String closedTime;
 	String lastUpdated;
 	String currentDateTime;
+	String userName;
 	
 	public int getId() {
 		return id;
@@ -62,6 +63,12 @@ public class TroubleDate {
 	}
 	public void setCurrentDateTime(String currentDateTime) {
 		this.currentDateTime = currentDateTime;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 	

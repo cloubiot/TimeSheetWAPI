@@ -21,6 +21,8 @@ import com.timeSheet.model.dbentity.UserRole;
 import com.timeSheet.model.dbentity.UserRoleMapping;
 import com.timeSheet.model.usermgmt.Feedback;
 import com.timeSheet.model.usermgmt.UserDetail;
+import com.timeSheet.model.usermgmt.UserTicketProject;
+import com.timeSheet.model.usermgmt.UserTicketResponse;
 import com.timeSheet.model.usermgmt.UserWithRole;
 
 @Service
@@ -120,6 +122,9 @@ public class UserMgmtService {
 	}
 	public List<UserDetail> getUserByProjectId(int projectId){
 		return this.userQuery.getUserByProjectId(projectId);
+	}
+	public List<UserTicketProject> getUserTicket(int id){
+		return this.userQuery.getUserTicket(id);
 	}
 	public Long getCount(){
 		return this.userMgmtRepository.count();

@@ -13,6 +13,7 @@ public class TicketRequest {
 	TroubleTicket troubleTicket;
 	TroubleActivity troubleActivity;
 	int parentId;
+	int orgId;
 
 	public TroubleTicket getTroubleTicket() {
 		return troubleTicket;
@@ -36,6 +37,14 @@ public class TicketRequest {
 
 	public void setTroubleActivity(TroubleActivity troubleActivity) {
 		this.troubleActivity = troubleActivity;
+	}
+
+	public int getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
 	
 	

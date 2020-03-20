@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.timeSheet.dao.Ticketquery;
 import com.timeSheet.dao.TroubleTicketRepository;
+import com.timeSheet.model.dbentity.Status;
 import com.timeSheet.model.dbentity.TroubleActivity;
 import com.timeSheet.model.dbentity.TroubleTicket;
 import com.timeSheet.model.dbentity.User;
@@ -39,12 +40,20 @@ public class TroubleTicketService {
 	public List<TroubleTicket> getAllTicket(){
 		return this.ticketquery.getAllTicket();
 	}
-	public List<TroubleTicketDetail> getTicketDetail(int assignTo,int roleId,User user){
-		return this.ticketquery.getTicketDetail(assignTo,roleId,user);
+	public List<TroubleTicketDetail> getTicketDetail(int orgId,int roleId,User user){
+		return this.ticketquery.getTicketDetail(orgId,roleId,user);
 	}
 	public List<ActivityResponse> getActivity(int id){
 		return this.ticketquery.getActivity(id);
 	}
+
+	public List<Status> getStatus(){
+		return this.ticketquery.getStatus();
+	}
+	public List<TroubleTicket> getTicketByPagination(int  from,int to,int orgId,String ticketNumber,String contactName){
+//	 return this.ticketquery.getTicketByPagination(from,to,orgId,ticketNumber,contactName);
+		return null;
+	 }
 
 	public TroubleTicketDetail getTicketDetailById(int id){
 		return this.ticketquery.getTicketDetailById(id);

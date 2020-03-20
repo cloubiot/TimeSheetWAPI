@@ -14,13 +14,14 @@ public class ActivityResponse {
 	int statusId;
 	@JsonFormat(pattern="dd-MM-yyyy hh:mm:ss")
 	Date createdDate;
-	String lastModUser;
+	int lastModUser;
 	@JsonFormat(pattern="dd-MM-yyyy hh:mm:ss")
 	Date lastModDate;
 	int roleId;
 	boolean mailNotes;
 	String email;
 	String phoneNumber;
+	String userName;
 	public int getId() {
 		return id;
 	}
@@ -57,10 +58,10 @@ public class ActivityResponse {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	public String getLastModUser() {
+	public int getLastModUser() {
 		return lastModUser;
 	}
-	public void setLastModUser(String lastModUser) {
+	public void setLastModUser(int lastModUser) {
 		this.lastModUser = lastModUser;
 	}
 	public Date getLastModDate() {
@@ -92,6 +93,12 @@ public class ActivityResponse {
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 	

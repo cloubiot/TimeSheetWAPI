@@ -13,6 +13,7 @@ import com.timeSheet.clib.util.SecureData;
 import com.timeSheet.model.dbentity.User;
 import com.timeSheet.model.timesheet.Report;
 import com.timeSheet.model.usermgmt.UserDetail;
+import com.timeSheet.model.usermgmt.UserTicketProject;
 import com.timeSheet.model.usermgmt.UserWithRole;
 import com.timeSheet.model.dbentity.GroupMapping;
 import com.timeSheet.model.dbentity.Organization;
@@ -154,6 +155,14 @@ public class UserQuery {
 							"inner join project_user_mapping on project_user_mapping.user_id = user.id "+
 							" where project_user_mapping.is_checked = 'true' and project_user_mapping.project_id = "+projectId;
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
+		return userDetail;
+	}
+
+	public List<UserTicketProject> getUserTicket(int id){
+		String query = "select user.*,project_user_mapping.PROJECT_ID,projects.PROJECT_NAME from user  "
+				+ "inner join project_user_mapping on project_user_mapping.USER_ID = user.id inner join projects on projects.ID = project_user_mapping.PROJECT_ID"
+				+ " where project_user_mapping.IS_CHECKED ='true' and user.id ="+id;
+		List<UserTicketProject> userDetail =  jdbcTemplate.query(query, new BeanPropertyRowMapper(UserTicketProject.class));
 		return userDetail;
 	}
 	public List<User> findSecureToken(String token){
