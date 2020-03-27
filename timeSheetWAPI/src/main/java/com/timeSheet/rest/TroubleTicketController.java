@@ -312,8 +312,8 @@ public class TroubleTicketController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/getTicketByPagination")
-	public SuccessIDResponse getTicketByPagination(@RequestBody TicketPaginationRequest request){
-	SuccessIDResponse response = new SuccessIDResponse();
+	public TicketDetailResponse getTicketByPagination(@RequestBody TicketPaginationRequest request){
+		TicketDetailResponse response = new TicketDetailResponse();
 			try{
 			  int from=1;
 			  int to=10;
@@ -327,8 +327,8 @@ public class TroubleTicketController {
 			         to+=10;
 			       }
 			}
-		List<TroubleTicket> ticketPage = troubleTicketService.getTicketByPagination(from, to,request.getOrgId(),request.getTicketNumber(),request.getContactName());
-	 response.setTicket(ticketPage);
+		List<TroubleTicketDetail> ticketPage = troubleTicketService.getTicketByPagination(from, to,request.getOrgId(),request.getTicketNumber(),request.getContactName());
+	 response.setTicketDetail(ticketPage);
 	logger.info("Ticket Pagination");
 	}
 	catch(Exception e){

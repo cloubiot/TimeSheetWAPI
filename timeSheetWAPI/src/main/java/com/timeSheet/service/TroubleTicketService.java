@@ -50,9 +50,8 @@ public class TroubleTicketService {
 	public List<Status> getStatus(){
 		return this.ticketquery.getStatus();
 	}
-	public List<TroubleTicket> getTicketByPagination(int  from,int to,int orgId,String ticketNumber,String contactName){
-//	 return this.ticketquery.getTicketByPagination(from,to,orgId,ticketNumber,contactName);
-		return null;
+	public List<TroubleTicketDetail> getTicketByPagination(int  from,int to,int orgId,String ticketNumber,String contactName){
+        return this.ticketquery.getTicketByPagination(from,to,orgId,ticketNumber,contactName);
 	 }
 
 	public TroubleTicketDetail getTicketDetailById(int id){

@@ -47,6 +47,19 @@ public class Ticketquery {
 		List<TroubleTicketDetail> ticketDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(TroubleTicketDetail.class));
 		return ticketDetail;
 	}
+	public List<TroubleTicketDetail> getTicketByPagination(int  from,int to,int orgId,String ticketNumber,String contactName){
+		if(ticketNumber == null)
+			ticketNumber ="";
+		if(contactName == null)
+			contactName ="";
+		String query = "select trouble_ticket.*,assigned_groups.name,status.status,user.first_name,DATE_FORMAT(trouble_ticket.SLA_TIME, '%m/%d/%Y %H:%i:%s') AS SLA_DATE from trouble_ticket "
+			+" inner join status on status.id = trouble_ticket.status_Id "
+			+" left join user on user.id = trouble_ticket.assigned_to"
+			+" left join assigned_groups on  assigned_groups.id = trouble_ticket.group_id where trouble_ticket.org_id="+orgId+" and trouble_ticket.TICKET_NUMBER like'%"+ticketNumber+"%' and trouble_ticket.CONTACT_NAME like '%"+contactName+"%'  order by id DESC ";
+		query+=" limit "+from+" ,"+to;
+		List<TroubleTicketDetail> getTicketByPagination = jdbcTemplate.query(query, new BeanPropertyRowMapper(TroubleTicketDetail.class));
+	return getTicketByPagination;
+}
 	public List<ActivityResponse> getActivity(int id){
 		String query = "select user.email,user.PHONE_NUMBER,user.USER_NAME,trouble_activity.* from trouble_activity "
 				+ " inner join user on user.id = trouble_activity.LAST_MOD_USER   "
