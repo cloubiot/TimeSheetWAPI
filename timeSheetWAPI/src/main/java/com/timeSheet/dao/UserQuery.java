@@ -94,7 +94,7 @@ public class UserQuery {
 	public List<UserDetail> getUserDetail(int id){
 		String query = "select user_role.desc,user_role_mapping.ROLE_ID,group_mapping.GROUP_ID, user.* from user " 
 				+"inner join user_role_mapping on user_role_mapping.USER_ID = user.id "
-				+"left join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
+				+"inner join user_role on user_role.ROLE = user_role_mapping.ROLE_ID "
 				+"inner join group_mapping on user.id = group_mapping.USER_ID "
 				+"where user.ORG_ID ="+id;
 		List<UserDetail> userDetail = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserDetail.class));
